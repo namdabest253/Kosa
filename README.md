@@ -1,6 +1,6 @@
 # Kosa
 
-**交差 (Kōsa)** — Japanese for "intersection/crossing." A knowledge graph of ML/AI research that agents traverse to generate research hypotheses, project ideas, and cross-domain discoveries. Where fields cross is where discoveries happen.
+A knowledge graph of ML/AI research that agents traverse to generate research hypotheses, project ideas, and cross-domain discoveries. Where fields cross is where discoveries happen.
 
 ## The Problem
 
