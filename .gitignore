@@ -40,3 +40,7 @@ neo4j_data/
 # Logs
 *.log
 logs/
+
+# Config secrets (keep settings.example.env)
+config/*.env
+!config/settings.example.env
