@@ -20,19 +20,32 @@ You are a precise ML/AI research entity extractor. Given a paper's title and abs
 extract all entities of these types:
 
 - **technique**: A specific method, algorithm, architecture, or model \
-(e.g., "FlashAttention", "LoRA", "diffusion models", "PPO")
-- **problem**: A known limitation, bottleneck, failure mode, or open challenge \
-(e.g., "quadratic memory scaling", "catastrophic forgetting", "mode collapse")
-- **dataset**: A standard evaluation dataset or benchmark \
-(e.g., "ImageNet", "MMLU", "LibriSpeech")
+(e.g., "Transformer", "LoRA", "DDPM", "PPO", "residual connections", "self-attention"). \
+Use the SHORT canonical name researchers use when citing this work \
+(e.g., "ResNet" not "Residual Learning Framework", "VAE" not "Auto-Encoding Variational Bayes", \
+"reparameterization trick" not "Reparameterization of the Variational Lower Bound").
+
+- **problem**: A known limitation, bottleneck, failure mode, or open challenge that the paper \
+either addresses or identifies. Extract BOTH: \
+(1) the problem this paper SOLVES (the motivation), and \
+(2) any limitations of the proposed approach. \
+Also extract problems that are implied by the motivation even if not stated as a named problem. \
+For example, if a paper says "existing models require O(n²) memory", extract the problem \
+"quadratic memory scaling in attention". \
+(e.g., "quadratic memory scaling", "catastrophic forgetting", "mode collapse", "training instability")
+
+- **dataset**: A specific, named evaluation dataset or benchmark. \
+Must be a real, citable dataset with a proper name. \
+Do NOT extract generic descriptions like "i.i.d. datasets" or "large-scale data" — \
+only named benchmarks (e.g., "ImageNet", "MMLU", "LibriSpeech", "WMT 2014 En-De").
 
 Rules:
 - Extract only entities explicitly mentioned or clearly implied by the text.
 - Do NOT hallucinate entities not supported by the text.
-- Use the most specific name for each entity (e.g., "FlashAttention-2" not "attention").
-- For techniques, prefer the canonical name used in the paper.
-- For problems, describe the actual bottleneck, not just a topic.
+- Use SHORT canonical names (e.g., "GAN" not "Generative Adversarial Network", "ResNet" not "Deep Residual Network").
+- The paper's title is NOT a technique name. Extract the technique the paper introduces, which may have the same name but is a method, not a document.
 - Each entity should appear only once in your output.
+- Aim for completeness: a typical ML paper mentions 3-8 techniques, 1-4 problems, and 2-6 datasets.
 
 Respond with valid JSON only. No markdown, no explanation."""
 
@@ -45,13 +58,13 @@ Extract all technique, problem, and dataset entities from this paper.
 Output format:
 {{
   "techniques": [
-    {{"name": "...", "description": "brief description from the paper"}}
+    {{"name": "short canonical name", "description": "brief description from the paper"}}
   ],
   "problems": [
-    {{"name": "...", "description": "brief description from the paper"}}
+    {{"name": "short description of the bottleneck", "description": "brief description from the paper"}}
   ],
   "datasets": [
-    {{"name": "...", "description": "brief description if available"}}
+    {{"name": "exact dataset name", "description": "brief description if available"}}
   ]
 }}"""
 
@@ -61,19 +74,27 @@ RELATION_EXTRACTION_SYSTEM = """\
 You are a precise ML/AI research relation extractor. Given a paper and its extracted entities, \
 identify relationships between them.
 
-Valid relationship types (use EXACTLY these labels):
-- INTRODUCES: paper introduces a technique (paper → technique)
-- EVALUATES_ON: paper evaluates on a dataset (paper → dataset)
-- HAS_LIMITATION: technique has a known limitation (technique → problem)
-- MITIGATES: technique addresses/solves a problem (technique → problem)
-- IMPROVES_OVER: technique improves upon another technique (technique → technique)
-- IS_INSTANCE_OF: entity is a specific case of a more general entity (problem → problem, technique → technique)
-- CAUSED_BY: problem is caused by another problem (problem → problem)
-- TEMPORALLY_FOLLOWS: technique succeeds another chronologically (technique → technique)
+Valid relationship types with STRICT direction rules:
+- INTRODUCES: The PAPER introduces a technique. Source MUST be "paper", target MUST be "technique". \
+Use the paper title as the source name.
+- EVALUATES_ON: The PAPER evaluates on a dataset. Source MUST be "paper", target MUST be "dataset". \
+Use the paper title as the source name.
+- HAS_LIMITATION: A technique has a limitation. Source MUST be "technique", target MUST be "problem".
+- MITIGATES: A technique addresses a problem. Source MUST be "technique", target MUST be "problem".
+- IMPROVES_OVER: A technique improves upon another SPECIFIC technique. Source and target MUST both be "technique". \
+Target must be a specific named technique, NOT a vague phrase like "existing methods" or "previous approaches".
+- IS_INSTANCE_OF: An entity is a specific case of a more general entity. \
+Valid: technique→technique, problem→problem.
+- CAUSED_BY: A problem is caused by another problem. Source and target MUST both be "problem".
+- TEMPORALLY_FOLLOWS: A technique succeeds another chronologically. Source and target MUST both be "technique".
 
-Rules:
-- Only extract relationships that are explicitly stated or strongly implied by the text.
-- Do NOT infer relationships that require external knowledge beyond the paper.
+Critical rules:
+- NEVER create a relation where source and target are the same entity.
+- NEVER reverse the direction (e.g., technique INTRODUCES paper is WRONG).
+- For INTRODUCES and EVALUATES_ON, the source is ALWAYS the paper title with source_type "paper".
+- For IMPROVES_OVER, the target must be a SPECIFIC named technique (e.g., "LSTM", "VGG"), \
+never a vague phrase. If the paper only claims generic improvement, skip this relation.
+- Only extract relationships explicitly stated or strongly implied by the text.
 - Every relationship must have a supporting quote or close paraphrase from the text.
 - Confidence: 0.9+ for explicitly stated, 0.7-0.9 for strongly implied, 0.5-0.7 for inferred.
 
@@ -89,13 +110,17 @@ Extracted entities:
 - Problems: {problems}
 - Datasets: {datasets}
 
-Extract all relationships between these entities and the paper.
+Extract all relationships. Remember:
+- For INTRODUCES: source is the paper title ("{title}") with source_type "paper"
+- For EVALUATES_ON: source is the paper title ("{title}") with source_type "paper"
+- NEVER create self-referential relations (source == target)
+- IMPROVES_OVER target must be a specific named technique, not "existing methods"
 
 Output format:
 {{
   "relations": [
     {{
-      "source": "entity name",
+      "source": "entity or paper name",
       "source_type": "paper|technique|problem|dataset",
       "relation": "INTRODUCES|EVALUATES_ON|HAS_LIMITATION|MITIGATES|IMPROVES_OVER|IS_INSTANCE_OF|CAUSED_BY|TEMPORALLY_FOLLOWS",
       "target": "entity name",
@@ -113,26 +138,42 @@ You are a knowledge graph schema alignment specialist for ML/AI research. \
 Given extracted entities, normalize them and add structured metadata.
 
 For each **technique**, add:
-- `mathematical_structure`: The underlying formal/mathematical structure. \
-Use domain-agnostic descriptions like "eigenvector of stochastic matrix", \
-"convex optimization", "fixed-point iteration", "block-sparse matrix multiplication". \
-If no clear mathematical structure, use "none".
+- `mathematical_structure`: The underlying formal/mathematical operation or structure. \
+Be SPECIFIC. Every technique has some mathematical basis — think about what it actually computes. \
+Examples:
+  - Transformer → "scaled dot-product attention with softmax normalization"
+  - ResNet → "identity shortcut connections / skip connections"
+  - VAE → "variational lower bound optimization with KL divergence regularization"
+  - GAN → "minimax two-player game / adversarial optimization"
+  - Adam → "adaptive first and second moment estimation for gradient descent"
+  - BatchNorm → "per-batch mean/variance normalization with learned affine transform"
+  - LoRA → "low-rank matrix factorization of weight updates"
+  - FlashAttention → "tiled block-sparse computation with IO-aware memory management"
+  - Diffusion models → "iterative denoising via learned reverse Markov chain"
+  - PPO → "clipped surrogate objective for policy gradient optimization"
+Do NOT use "none" unless the entity is so vague it has no identifiable mathematical basis. \
+If unsure, describe what the technique computes or optimizes.
 
 For each **problem**, add:
 - `bottleneck_class`: A domain-agnostic structural description of the bottleneck. \
-Do NOT use domain-specific jargon. Examples:
-  - "exponential_signal_decay_across_stages" (not "vanishing gradients")
-  - "quadratic_scaling_with_sequence_length" (not "attention is slow")
-  - "distribution_shift_between_training_and_deployment" (not "domain adaptation")
-  - "combinatorial_explosion_in_search_space" (not "NP-hard planning")
-
-The bottleneck_class should describe the structural nature of the problem so that \
-solutions from other domains with the same structural bottleneck can be connected.
+Do NOT use ML-specific jargon. Describe the STRUCTURAL nature of the problem so that \
+solutions from entirely different fields with the same structural bottleneck can be connected. \
+Examples:
+  - "vanishing gradients" → "exponential_signal_decay_across_stages"
+  - "attention is slow" → "quadratic_scaling_with_input_length"
+  - "catastrophic forgetting" → "interference_between_sequential_learned_representations"
+  - "mode collapse" → "degenerate_fixed_point_in_adversarial_dynamics"
+  - "overfitting" → "model_capacity_exceeds_training_signal"
+  - "distribution shift" → "mismatch_between_training_and_deployment_distributions"
+  - "expensive fine-tuning" → "parameter_count_scaling_with_model_size"
+NEVER use "none" for bottleneck_class. Every problem has a structural nature.
 
 Rules:
-- Normalize entity names to canonical forms (e.g., "layer norm" → "LayerNorm").
+- Normalize entity names to short canonical forms used by practitioners \
+(e.g., "layer norm" → "LayerNorm", "Residual Learning Framework" → "ResNet", \
+"Auto-Encoding Variational Bayes" → "VAE", "generative adversarial network" → "GAN").
 - Merge obvious duplicates (e.g., "GPT3" and "GPT-3").
-- Keep mathematical_structure and bottleneck_class as concise as possible.
+- Keep mathematical_structure and bottleneck_class concise (under 10 words).
 
 Respond with valid JSON only."""
 
@@ -152,7 +193,7 @@ Output format:
       "name": "canonical name",
       "original_name": "name as extracted",
       "description": "...",
-      "mathematical_structure": "domain-agnostic formal structure"
+      "mathematical_structure": "specific formal structure (NEVER 'none' for known techniques)"
     }}
   ],
   "problems": [
@@ -160,7 +201,7 @@ Output format:
       "name": "canonical name",
       "original_name": "name as extracted",
       "description": "...",
-      "bottleneck_class": "domain_agnostic_structural_description"
+      "bottleneck_class": "domain_agnostic_structural_description (NEVER 'none')"
     }}
   ]
 }}"""

@@ -1,0 +1,472 @@
+[
+  {
+    "arxiv_id": "1706.03762",
+    "title": "Attention Is All You Need",
+    "authors": [
+      "Ashish Vaswani",
+      "Noam Shazeer",
+      "Niki Parmar",
+      "Jakob Uszkoreit",
+      "Llion Jones",
+      "Aidan N. Gomez",
+      "Lukasz Kaiser",
+      "Illia Polosukhin"
+    ],
+    "year": 2017,
+    "venue": "NeurIPS",
+    "entities": [
+      {
+        "name": "Transformer",
+        "type": "Technique",
+        "description": "A new simple network architecture based solely on attention mechanisms, dispensing with recurrence and convolutions.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "WMT 2014 English-to-German",
+        "type": "Dataset",
+        "description": "A machine translation task where the model achieved 28.4 BLEU.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      },
+      {
+        "name": "WMT 2014 English-to-French",
+        "type": "Dataset",
+        "description": "A machine translation task where the model established a new single-model state-of-the-art BLEU score of 41.8.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      }
+    ],
+    "relations": [
+      {
+        "source": "Attention Is All You Need",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Transformer",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "We propose a new simple network architecture, the Transformer, based solely on attention mechanisms."
+      },
+      {
+        "source": "Attention Is All You Need",
+        "source_type": "Paper",
+        "relation": "EVALUATES_ON",
+        "target": "WMT 2014 English-to-German",
+        "target_type": "Dataset",
+        "confidence": 0.9,
+        "supporting_text": "Experiments on two machine translation tasks show these models to be superior in quality."
+      },
+      {
+        "source": "Attention Is All You Need",
+        "source_type": "Paper",
+        "relation": "EVALUATES_ON",
+        "target": "WMT 2014 English-to-French",
+        "target_type": "Dataset",
+        "confidence": 0.9,
+        "supporting_text": "Experiments on two machine translation tasks show these models to be superior in quality."
+      },
+      {
+        "source": "Transformer",
+        "source_type": "Technique",
+        "relation": "IMPROVES_OVER",
+        "target": "existing best results",
+        "target_type": "Technique",
+        "confidence": 0.85,
+        "supporting_text": "improving over the existing best results, including ensembles by over 2 BLEU."
+      }
+    ],
+    "novelty": {
+      "classification": "novel_technique",
+      "confidence": 0.95,
+      "reasoning": "The paper introduces the Transformer architecture, which is a fundamentally new approach based solely on attention mechanisms, eliminating the need for recurrence and convolutions."
+    },
+    "errors": []
+  },
+  {
+    "arxiv_id": "1312.6114",
+    "title": "Auto-Encoding Variational Bayes",
+    "authors": [
+      "Diederik P Kingma",
+      "Max Welling"
+    ],
+    "year": 2013,
+    "venue": "ICLR",
+    "entities": [
+      {
+        "name": "Stochastic Variational Inference",
+        "type": "Technique",
+        "description": "A learning algorithm that scales to large datasets and works in the intractable case.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Reparameterization of the Variational Lower Bound",
+        "type": "Technique",
+        "description": "Yields a lower bound estimator that can be optimized using standard stochastic gradient methods.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Approximate Inference Model",
+        "type": "Technique",
+        "description": "Also called a recognition model, it is fitted to the intractable posterior using the proposed lower bound estimator.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Intractable Posterior Distributions",
+        "type": "Problem",
+        "description": "The challenge of performing efficient inference and learning in the presence of continuous latent variables.",
+        "mathematical_structure": null,
+        "bottleneck_class": "none"
+      },
+      {
+        "name": "i.i.d. datasets",
+        "type": "Dataset",
+        "description": "Datasets with continuous latent variables per datapoint.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      }
+    ],
+    "relations": [
+      {
+        "source": "Auto-Encoding Variational Bayes",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Stochastic Variational Inference",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "We introduce a stochastic variational inference and learning algorithm"
+      },
+      {
+        "source": "Auto-Encoding Variational Bayes",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Reparameterization of the Variational Lower Bound",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "we show that a reparameterization of the variational lower bound yields a lower bound estimator"
+      },
+      {
+        "source": "Auto-Encoding Variational Bayes",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Approximate Inference Model",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "fitting an approximate inference model (also called a recognition model) to the intractable posterior"
+      },
+      {
+        "source": "Stochastic Variational Inference",
+        "source_type": "Technique",
+        "relation": "MITIGATES",
+        "target": "Intractable Posterior Distributions",
+        "target_type": "Problem",
+        "confidence": 0.85,
+        "supporting_text": "even works in the intractable case"
+      },
+      {
+        "source": "Auto-Encoding Variational Bayes",
+        "source_type": "Paper",
+        "relation": "EVALUATES_ON",
+        "target": "i.i.d. datasets",
+        "target_type": "Dataset",
+        "confidence": 0.9,
+        "supporting_text": "for i.i.d. datasets with continuous latent variables per datapoint"
+      }
+    ],
+    "novelty": {
+      "classification": "novel_technique",
+      "confidence": 0.9,
+      "reasoning": "The paper introduces a new stochastic variational inference algorithm that effectively addresses the challenges of intractable posterior distributions in large datasets."
+    },
+    "errors": []
+  },
+  {
+    "arxiv_id": "1406.2661",
+    "title": "Generative Adversarial Networks",
+    "authors": [
+      "Ian J. Goodfellow",
+      "Jean Pouget-Abadie",
+      "Mehdi Mirza",
+      "Bing Xu",
+      "David Warde-Farley",
+      "Sherjil Ozair",
+      "Aaron Courville",
+      "Yoshua Bengio"
+    ],
+    "year": 2014,
+    "venue": "NeurIPS",
+    "entities": [
+      {
+        "name": "Generative Adversarial Networks",
+        "type": "Technique",
+        "description": "A framework for estimating generative models via an adversarial process involving a generative model G and a discriminative model D.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Backpropagation",
+        "type": "Technique",
+        "description": "The training method used for the multilayer perceptrons defining G and D.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      }
+    ],
+    "relations": [
+      {
+        "source": "Generative Adversarial Networks",
+        "source_type": "Technique",
+        "relation": "INTRODUCES",
+        "target": "Generative Adversarial Networks",
+        "target_type": "Paper",
+        "confidence": 0.9,
+        "supporting_text": "We propose a new framework for estimating generative models via an adversarial process"
+      },
+      {
+        "source": "Generative Adversarial Networks",
+        "source_type": "Technique",
+        "relation": "IMPROVES_OVER",
+        "target": "Backpropagation",
+        "target_type": "Technique",
+        "confidence": 0.8,
+        "supporting_text": "the entire system can be trained with backpropagation"
+      }
+    ],
+    "novelty": {
+      "classification": "novel_technique",
+      "confidence": 0.95,
+      "reasoning": "The paper introduces a fundamentally new framework for generative modeling through adversarial training, which is a significant departure from existing methods at the time."
+    },
+    "errors": []
+  },
+  {
+    "arxiv_id": "1512.03385",
+    "title": "Deep Residual Learning for Image Recognition",
+    "authors": [
+      "Kaiming He",
+      "Xiangyu Zhang",
+      "Shaoqing Ren",
+      "Jian Sun"
+    ],
+    "year": 2015,
+    "venue": "CVPR",
+    "entities": [
+      {
+        "name": "Residual Learning Framework",
+        "type": "Technique",
+        "description": "a framework to ease the training of networks that are substantially deeper than those used previously",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Residual Networks",
+        "type": "Technique",
+        "description": "networks that learn residual functions with reference to the layer inputs",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Difficulty in Training Deeper Neural Networks",
+        "type": "Problem",
+        "description": "deeper neural networks are more difficult to train",
+        "mathematical_structure": null,
+        "bottleneck_class": "exponential_signal_decay_across_stages"
+      },
+      {
+        "name": "ImageNet",
+        "type": "Dataset",
+        "description": "evaluated residual nets with a depth of up to 152 layers",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      },
+      {
+        "name": "CIFAR-10",
+        "type": "Dataset",
+        "description": "analyzed with 100 and 1000 layers",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      },
+      {
+        "name": "COCO",
+        "type": "Dataset",
+        "description": "object detection dataset where a 28% relative improvement was obtained",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      }
+    ],
+    "relations": [
+      {
+        "source": "Deep Residual Learning for Image Recognition",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Residual Learning Framework",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously."
+      },
+      {
+        "source": "Deep Residual Learning for Image Recognition",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Residual Networks",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "We provide comprehensive empirical evidence showing that these residual networks are easier to optimize."
+      },
+      {
+        "source": "Residual Learning Framework",
+        "source_type": "Technique",
+        "relation": "MITIGATES",
+        "target": "Difficulty in Training Deeper Neural Networks",
+        "target_type": "Problem",
+        "confidence": 0.9,
+        "supporting_text": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously."
+      },
+      {
+        "source": "Deep Residual Learning for Image Recognition",
+        "source_type": "Paper",
+        "relation": "EVALUATES_ON",
+        "target": "ImageNet",
+        "target_type": "Dataset",
+        "confidence": 0.9,
+        "supporting_text": "On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers."
+      },
+      {
+        "source": "Deep Residual Learning for Image Recognition",
+        "source_type": "Paper",
+        "relation": "EVALUATES_ON",
+        "target": "CIFAR-10",
+        "target_type": "Dataset",
+        "confidence": 0.9,
+        "supporting_text": "We also present analysis on CIFAR-10 with 100 and 1000 layers."
+      },
+      {
+        "source": "Deep Residual Learning for Image Recognition",
+        "source_type": "Paper",
+        "relation": "EVALUATES_ON",
+        "target": "COCO",
+        "target_type": "Dataset",
+        "confidence": 0.9,
+        "supporting_text": "Solely due to our extremely deep representations, we obtain a 28% relative improvement on the COCO object detection dataset."
+      },
+      {
+        "source": "Residual Networks",
+        "source_type": "Technique",
+        "relation": "IMPROVES_OVER",
+        "target": "VGG nets",
+        "target_type": "Technique",
+        "confidence": 0.85,
+        "supporting_text": "8x deeper than VGG nets but still having lower complexity."
+      }
+    ],
+    "novelty": {
+      "classification": "novel_technique",
+      "confidence": 0.9,
+      "reasoning": "The paper introduces a fundamentally new residual learning framework that significantly changes how deep neural networks are trained, allowing for much deeper architectures."
+    },
+    "errors": []
+  },
+  {
+    "arxiv_id": "1810.04805",
+    "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+    "authors": [
+      "Jacob Devlin",
+      "Ming-Wei Chang",
+      "Kenton Lee",
+      "Kristina Toutanova"
+    ],
+    "year": 2018,
+    "venue": "NAACL",
+    "entities": [
+      {
+        "name": "BERT",
+        "type": "Technique",
+        "description": "Bidirectional Encoder Representations from Transformers, a language representation model designed to pre-train deep bidirectional representations from unlabeled text.",
+        "mathematical_structure": "none",
+        "bottleneck_class": null
+      },
+      {
+        "name": "GLUE",
+        "type": "Dataset",
+        "description": "A benchmark for evaluating natural language understanding systems.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      },
+      {
+        "name": "MultiNLI",
+        "type": "Dataset",
+        "description": "A dataset for natural language inference.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      },
+      {
+        "name": "SQuAD v1.1",
+        "type": "Dataset",
+        "description": "A dataset for question answering.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      },
+      {
+        "name": "SQuAD v2.0",
+        "type": "Dataset",
+        "description": "An updated dataset for question answering that includes unanswerable questions.",
+        "mathematical_structure": null,
+        "bottleneck_class": null
+      }
+    ],
+    "relations": [
+      {
+        "source": "BERT",
+        "source_type": "Technique",
+        "relation": "INTRODUCES",
+        "target": "BERT",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "We introduce a new language representation model called BERT"
+      },
+      {
+        "source": "BERT",
+        "source_type": "Technique",
+        "relation": "EVALUATES_ON",
+        "target": "GLUE",
+        "target_type": "Dataset",
+        "confidence": 0.85,
+        "supporting_text": "It obtains new state-of-the-art results on eleven natural language processing tasks, including pushing the GLUE score to 80.5%"
+      },
+      {
+        "source": "BERT",
+        "source_type": "Technique",
+        "relation": "EVALUATES_ON",
+        "target": "MultiNLI",
+        "target_type": "Dataset",
+        "confidence": 0.85,
+        "supporting_text": "MultiNLI accuracy to 86.7% (4.6% absolute improvement)"
+      },
+      {
+        "source": "BERT",
+        "source_type": "Technique",
+        "relation": "EVALUATES_ON",
+        "target": "SQuAD v1.1",
+        "target_type": "Dataset",
+        "confidence": 0.85,
+        "supporting_text": "SQuAD v1.1 question answering Test F1 to 93.2 (1.5 point absolute improvement)"
+      },
+      {
+        "source": "BERT",
+        "source_type": "Technique",
+        "relation": "EVALUATES_ON",
+        "target": "SQuAD v2.0",
+        "target_type": "Dataset",
+        "confidence": 0.85,
+        "supporting_text": "SQuAD v2.0 Test F1 to 83.1 (5.1 point absolute improvement)"
+      }
+    ],
+    "novelty": {
+      "classification": "novel_technique",
+      "confidence": 0.95,
+      "reasoning": "BERT introduces a fundamentally new method for pre-training language representations using deep bidirectional transformers, which significantly advances the state of the art in NLP tasks."
+    },
+    "errors": []
+  }
+]

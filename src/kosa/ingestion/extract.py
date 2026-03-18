@@ -32,7 +32,7 @@ from kosa.ingestion.prompts import (
 
 logger = logging.getLogger(__name__)
 
-ARXIV_API_URL = "http://export.arxiv.org/api/query"
+ARXIV_API_URL = "https://export.arxiv.org/api/query"
 ARXIV_BATCH_SIZE = 20  # arXiv API allows up to ~20 IDs per request
 ARXIV_RATE_LIMIT_SECONDS = 3  # be polite
 
