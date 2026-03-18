@@ -34,6 +34,10 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+"src/kosa/ingestion/corpus.py" = ["E501"]
+"src/kosa/ingestion/prompts.py" = ["E501"]
+
 [tool.ruff.lint.isort]
 known-first-party = ["kosa"]
 

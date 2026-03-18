@@ -210,17 +210,16 @@ CITES_PROPERTIES = {
 
 CONSTRAINTS: list[str] = [
     # Unique arxiv_id on Paper nodes
-    "CREATE CONSTRAINT paper_arxiv_id IF NOT EXISTS " "FOR (p:Paper) REQUIRE p.arxiv_id IS UNIQUE",
+    "CREATE CONSTRAINT paper_arxiv_id IF NOT EXISTS FOR (p:Paper) REQUIRE p.arxiv_id IS UNIQUE",
     # Unique names within each concept type (prevents trivial duplicates)
-    "CREATE CONSTRAINT technique_name IF NOT EXISTS " "FOR (t:Technique) REQUIRE t.name IS UNIQUE",
-    "CREATE CONSTRAINT problem_name IF NOT EXISTS " "FOR (p:Problem) REQUIRE p.name IS UNIQUE",
-    "CREATE CONSTRAINT dataset_name IF NOT EXISTS " "FOR (d:Dataset) REQUIRE d.name IS UNIQUE",
+    "CREATE CONSTRAINT technique_name IF NOT EXISTS FOR (t:Technique) REQUIRE t.name IS UNIQUE",
+    "CREATE CONSTRAINT problem_name IF NOT EXISTS FOR (p:Problem) REQUIRE p.name IS UNIQUE",
+    "CREATE CONSTRAINT dataset_name IF NOT EXISTS FOR (d:Dataset) REQUIRE d.name IS UNIQUE",
 ]
 
 INDEXES: list[str] = [
     # Full-text indexes for search
-    "CREATE FULLTEXT INDEX paper_search IF NOT EXISTS "
-    "FOR (p:Paper) ON EACH [p.title, p.abstract]",
+    "CREATE FULLTEXT INDEX paper_search IF NOT EXISTS FOR (p:Paper) ON EACH [p.title, p.abstract]",
     "CREATE FULLTEXT INDEX technique_search IF NOT EXISTS "
     "FOR (t:Technique) ON EACH [t.name, t.description]",
     "CREATE FULLTEXT INDEX problem_search IF NOT EXISTS "
