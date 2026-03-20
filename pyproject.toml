@@ -42,6 +42,7 @@ select = ["E", "F", "I", "W", "UP"]
 "src/kosa/ingestion/corpus.py" = ["E501"]
 "src/kosa/ingestion/prompts.py" = ["E501"]
 "src/kosa/ingestion/evaluate.py" = ["E501"]
+"src/kosa/ingestion/holdout.py" = ["E501"]
 "scripts/*" = ["E501"]
 "src/kosa/api/routes/*" = ["E501"]
 

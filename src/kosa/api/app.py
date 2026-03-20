@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -13,12 +14,18 @@ from kosa.api.deps import close_driver, get_driver
 from kosa.api.routes import activation, graph, hypotheses, stats
 from kosa.config import settings
 
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup: verify Neo4j connection. Shutdown: close driver."""
-    driver = await get_driver()
-    await driver.verify_connectivity()
+    """Startup: verify Neo4j connection (warn if unavailable). Shutdown: close driver."""
+    try:
+        driver = await get_driver()
+        await driver.verify_connectivity()
+        logger.info("Neo4j connected at %s", settings.neo4j_uri)
+    except Exception as e:
+        logger.warning("Neo4j unavailable at startup: %s — API will retry on first request", e)
     yield
     await close_driver()
 
