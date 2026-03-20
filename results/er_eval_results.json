@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-03-20T20:04:03.685426+00:00",
+  "total_entities": 25,
+  "total_techniques": 6,
+  "total_problems": 9,
+  "total_datasets": 10,
+  "pairs_evaluated": 1,
+  "same_as_links": 0,
+  "merges": 0,
+  "duplicate_rate": 0.0,
+  "passes_threshold": true,
+  "precision": null,
+  "recall": null,
+  "f1": null,
+  "top_duplicates": []
+}

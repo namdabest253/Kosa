@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-03-20T20:03:48.482926+00:00",
+  "seed_nodes": [
+    "transformer",
+    "flash_attn",
+    "mamba"
+  ],
+  "runs": [
+    {
+      "method": "typed_walk",
+      "seed_node": "transformer",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 2,
+      "avg_activation_score": 0.7007625000000001,
+      "depth_distribution": {
+        "1": 2,
+        "2": 2
+      }
+    },
+    {
+      "method": "ppr",
+      "seed_node": "transformer",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 0,
+      "avg_activation_score": 0.1939929429459029,
+      "depth_distribution": {}
+    },
+    {
+      "method": "embedding_only",
+      "seed_node": "transformer",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 0,
+      "avg_activation_score": 0.65,
+      "depth_distribution": {}
+    },
+    {
+      "method": "typed_walk",
+      "seed_node": "flash_attn",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 2,
+      "avg_activation_score": 0.6964875,
+      "depth_distribution": {
+        "1": 2,
+        "2": 2
+      }
+    },
+    {
+      "method": "ppr",
+      "seed_node": "flash_attn",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 0,
+      "avg_activation_score": 0.1518450060049289,
+      "depth_distribution": {}
+    },
+    {
+      "method": "embedding_only",
+      "seed_node": "flash_attn",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 0,
+      "avg_activation_score": 0.65,
+      "depth_distribution": {}
+    },
+    {
+      "method": "typed_walk",
+      "seed_node": "mamba",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 3,
+      "avg_activation_score": 0.6031845,
+      "depth_distribution": {
+        "1": 1,
+        "2": 2,
+        "3": 1
+      }
+    },
+    {
+      "method": "ppr",
+      "seed_node": "mamba",
+      "activated_nodes": 4,
+      "unique_node_types": 2,
+      "max_depth_reached": 0,
+      "avg_activation_score": 0.18885912011312236,
+      "depth_distribution": {}
+    },
+    {
+      "method": "embedding_only",
+      "seed_node": "mamba",
+      "activated_nodes": 3,
+      "unique_node_types": 2,
+      "max_depth_reached": 0,
+      "avg_activation_score": 0.6,
+      "depth_distribution": {}
+    }
+  ]
+}
