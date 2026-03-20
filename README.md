@@ -46,8 +46,8 @@ Ingestion → Graph Store → Activation Wave → Agent Evaluation → Ranked Ou
 ```
 
 **Backend Modules:**
-- `ingestion/` — Paper parsing, entity/relation extraction via LLM (cheap model)
-- `graph/` — Neo4j schema, CRUD, Leiden clustering
+- `ingestion/` — Paper parsing, citation fetching (Semantic Scholar), entity/relation extraction via LLM (cheap model)
+- `graph/` — Neo4j schema, CRUD, batch loader, Leiden clustering
 - `entity_resolution/` — First-class dedup with own precision/recall metrics
 - `activation/` — Typed random walk, embedding similarity, blast radius computation
 - `agents/` — Hypothesis and project idea generation (expensive model)
