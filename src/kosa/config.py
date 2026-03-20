@@ -19,5 +19,10 @@ class Settings(BaseSettings):
     # Ingestion
     batch_api: bool = True  # Use OpenAI Batch API for 50% cost savings on extraction
 
+    # API
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
+    cors_origins: list[str] = ["http://localhost:5173"]  # Vite dev server
+
 
 settings = Settings()

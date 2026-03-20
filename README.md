@@ -40,23 +40,39 @@ Hypotheses are ranked via pairwise Elo tournament, with structural feasibility c
 ```
 Ingestion → Graph Store → Activation Wave → Agent Evaluation → Ranked Output
   (arXiv)    (Neo4j)    (typed walk+embeds) (single/multi)    (hypotheses)
+                                                                    ↓
+                                              FastAPI Web Service → React Frontend
+                                          (routes, Neo4j driver)  (Sigma.js viz)
 ```
 
-**Modules:**
+**Backend Modules:**
 - `ingestion/` — Paper parsing, entity/relation extraction via LLM (cheap model)
 - `graph/` — Neo4j schema, CRUD, Leiden clustering
 - `entity_resolution/` — First-class dedup with own precision/recall metrics
 - `activation/` — Typed random walk, embedding similarity, blast radius computation
 - `agents/` — Hypothesis and project idea generation (expensive model)
 - `ranking/` — Pairwise Elo ranking, structural feasibility, novelty detection
+- `api/` — FastAPI routes: graph query, hypothesis generation, activation, stats (Phase 2)
 
-## Tech Stack (Phase 1)
+**Frontend:**
+- `web/` — React + TypeScript UI with Sigma.js graph visualization, recharts dashboard (Phase 2)
 
+## Tech Stack
+
+**Core (Phase 1):**
 - **Python 3.11+** (src-layout package: `kosa`)
 - **Neo4j** — Graph storage with MERGE operations
 - **nano-graphrag** — KG construction (~1100 lines Python)
 - **GPT-4o-mini** — Entity/relation extraction (cheap, high volume)
 - **GPT-4o** — Hypothesis generation, ranking, and extraction quality evaluation
+
+**Web Layer (Phase 2):**
+- **FastAPI** — REST API with async Neo4j driver, CORS middleware
+- **React 18 + TypeScript** — Web frontend (src-layout in `web/` directory)
+- **Sigma.js** — Interactive graph visualization with pan, zoom, hover
+- **Recharts** — Dashboard charts and statistics
+- **python-igraph** — ForceAtlas2 layout computation via `compute_layout.py`
+- **Uvicorn** — ASGI server
 
 ## Graph Schema (Phase 1)
 
@@ -78,7 +94,7 @@ All edges carry provenance: confidence score, source paper, source venue, venue 
 
 **Phase 1.5** — Batch multi-agent debate on same static KG. Pairwise Elo ranking. Falsification gates.
 
-**Phase 2** — Streaming arXiv ingestion. LightRAG incremental updates. Scaled evaluation.
+**Phase 2** — FastAPI web service + React frontend (Sigma.js graph viz, recharts dashboard). ForceAtlas2 layout pre-computation. Streaming arXiv ingestion. LightRAG incremental updates. Scaled evaluation.
 
 **Phase 3** — Feedback-driven self-improvement. Expand beyond ML/AI domain.
 
