@@ -70,6 +70,7 @@ class TestTypeMaps:
             "HAS_LIMITATION",
             "MITIGATES",
             "IMPROVES_OVER",
+            "USES",
             "IS_INSTANCE_OF",
             "CAUSED_BY",
             "TEMPORALLY_FOLLOWS",

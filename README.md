@@ -52,21 +52,27 @@ Ingestion → Graph Store → Activation Wave → Agent Evaluation → Ranked Ou
 
 ## Tech Stack (Phase 1)
 
-- **Python 3.11+**
+- **Python 3.11+** (src-layout package: `kosa`)
 - **Neo4j** — Graph storage with MERGE operations
 - **nano-graphrag** — KG construction (~1100 lines Python)
-- **DeepSeek V3.2** — Entity extraction (cheap, high volume)
-- **Claude Sonnet** — Hypothesis generation + ranking (expensive, low volume)
+- **GPT-4o-mini** — Entity/relation extraction (cheap, high volume)
+- **GPT-4o** — Hypothesis generation, ranking, and extraction quality evaluation
 
-## Graph Schema
+## Graph Schema (Phase 1)
 
-**Node types:** `capability`, `system`, `technique`, `problem`, `domain`, `benchmark`
+**Node types:** `Paper`, `Technique`, `Problem`, `Dataset`
 
-**Edge types:** `enables`, `has_limitation`, `mitigates`, `improves_over`, `is_instance_of`, `used_in`, `belongs_to`, `evaluated_on`, `caused_by`, `temporally_follows`, `same_as`
+**Edge types:**
+- Ground truth: `CITES` (paper→paper)
+- High confidence: `INTRODUCES` (paper→technique), `EVALUATES_ON` (paper→dataset)
+- Medium confidence: `HAS_LIMITATION`, `MITIGATES`, `IMPROVES_OVER`, `USES`, `IS_INSTANCE_OF`, `CAUSED_BY`, `TEMPORALLY_FOLLOWS` (all technique/problem→technique/problem)
+- Entity resolution: `SAME_AS` (confidence-scored)
+
+All edges carry provenance: confidence score, source paper, source venue, venue weight, supporting text excerpt.
 
 ## Roadmap
 
-**Phase 0** — Extraction quality audit on 50 papers. Must hit >80% precision, >65% recall before proceeding.
+**Phase 0** — Extraction quality audit on 50 papers. Quality gate: 100% schema conformance, >80% entity accuracy, >80% relation accuracy (LLM-as-judge). **COMPLETE** — see `docs/PHASE0_AUDIT_REPORT.md`.
 
 **Phase 1** — Static KG from 2K ML/AI papers. Typed random walk activation. Single agent. Human feedback from day 1. Temporal holdout validation against known 2024-2025 innovations.
 

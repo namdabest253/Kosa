@@ -23,37 +23,44 @@
         "bottleneck_class": null
       },
       {
-        "name": "model complexity",
+        "name": "Attention Mechanism",
+        "type": "Technique",
+        "description": "connects the encoder and decoder in the model",
+        "mathematical_structure": "weighted sum of input representations",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Model Complexity",
         "type": "Problem",
         "description": "dominant sequence transduction models are based on complex recurrent or convolutional neural networks",
         "mathematical_structure": null,
         "bottleneck_class": "exponential_signal_decay_across_stages"
       },
       {
-        "name": "training time",
+        "name": "Training Time",
         "type": "Problem",
         "description": "existing models require significantly more time to train",
         "mathematical_structure": null,
         "bottleneck_class": "parameter_count_scaling_with_model_size"
       },
       {
-        "name": "task generalization",
+        "name": "Parallelization",
         "type": "Problem",
-        "description": "the need for models that generalize well to other tasks",
+        "description": "existing models are less parallelizable compared to the proposed Transformer",
         "mathematical_structure": null,
-        "bottleneck_class": "interference_between_sequential_learned_representations"
+        "bottleneck_class": "limited_parallel_execution_capacity"
       },
       {
         "name": "WMT 2014 English-to-German",
         "type": "Dataset",
-        "description": "machine translation task achieving 28.4 BLEU",
+        "description": "machine translation task where the model achieved 28.4 BLEU",
         "mathematical_structure": null,
         "bottleneck_class": null
       },
       {
         "name": "WMT 2014 English-to-French",
         "type": "Dataset",
-        "description": "machine translation task establishing a new single-model state-of-the-art BLEU score of 41.8",
+        "description": "machine translation task where the model established a new state-of-the-art BLEU score of 41.8",
         "mathematical_structure": null,
         "bottleneck_class": null
       }
@@ -89,8 +96,17 @@
       {
         "source": "Transformer",
         "source_type": "Technique",
+        "relation": "USES",
+        "target": "Attention Mechanism",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "the Transformer, based solely on attention mechanisms."
+      },
+      {
+        "source": "Transformer",
+        "source_type": "Technique",
         "relation": "MITIGATES",
-        "target": "model complexity",
+        "target": "Model Complexity",
         "target_type": "Problem",
         "confidence": 0.85,
         "supporting_text": "dispensing with recurrence and convolutions entirely."
@@ -99,7 +115,7 @@
         "source": "Transformer",
         "source_type": "Technique",
         "relation": "MITIGATES",
-        "target": "training time",
+        "target": "Training Time",
         "target_type": "Problem",
         "confidence": 0.85,
         "supporting_text": "requiring significantly less time to train."
@@ -108,10 +124,19 @@
         "source": "Transformer",
         "source_type": "Technique",
         "relation": "MITIGATES",
-        "target": "task generalization",
+        "target": "Parallelization",
         "target_type": "Problem",
         "confidence": 0.85,
-        "supporting_text": "We show that the Transformer generalizes well to other tasks."
+        "supporting_text": "while being more parallelizable."
+      },
+      {
+        "source": "Transformer",
+        "source_type": "Technique",
+        "relation": "IMPROVES_OVER",
+        "target": "existing best results",
+        "target_type": "Technique",
+        "confidence": 0.7,
+        "supporting_text": "improving over the existing best results, including ensembles by over 2 BLEU."
       }
     ],
     "novelty": {
@@ -134,37 +159,51 @@
       {
         "name": "VAE",
         "type": "Technique",
-        "description": "stochastic variational inference and learning algorithm that scales to large datasets",
+        "description": "Auto-Encoding Variational Bayes method for efficient inference and learning in directed probabilistic models",
         "mathematical_structure": "variational lower bound optimization with KL divergence regularization",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Stochastic Variational Inference",
+        "type": "Technique",
+        "description": "algorithm that scales to large datasets",
+        "mathematical_structure": "stochastic optimization for variational inference",
         "bottleneck_class": null
       },
       {
         "name": "Reparameterization Trick",
         "type": "Technique",
-        "description": "a reparameterization of the variational lower bound yields a lower bound estimator",
-        "mathematical_structure": "reparameterization of stochastic variables",
+        "description": "reparameterization of the variational lower bound for optimization",
+        "mathematical_structure": "parameter transformation for gradient estimation",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Recognition Model",
+        "type": "Technique",
+        "description": "approximate inference model fitted to the intractable posterior",
+        "mathematical_structure": "approximate posterior inference via variational methods",
         "bottleneck_class": null
       },
       {
         "name": "Intractable Posterior Distributions",
         "type": "Problem",
-        "description": "efficient inference and learning in directed probabilistic models with intractable posterior distributions",
+        "description": "challenge of performing inference with intractable posteriors",
         "mathematical_structure": null,
-        "bottleneck_class": "exponential_signal_decay_across_stages"
+        "bottleneck_class": "inference_with_complex_distributions"
       },
       {
         "name": "Scalability to Large Datasets",
         "type": "Problem",
-        "description": "performing inference and learning in the presence of large datasets",
+        "description": "need for efficient learning in the presence of large datasets",
         "mathematical_structure": null,
-        "bottleneck_class": "parameter_count_scaling_with_model_size"
+        "bottleneck_class": "parameter_count_scaling_with_data_size"
       },
       {
-        "name": "i.i.d. datasets",
-        "type": "Dataset",
-        "description": "datasets with continuous latent variables per datapoint",
+        "name": "Continuous Latent Variables",
+        "type": "Problem",
+        "description": "issue of handling continuous latent variables per datapoint",
         "mathematical_structure": null,
-        "bottleneck_class": null
+        "bottleneck_class": "complexity_of_latent_variable_representation"
       }
     ],
     "relations": [
@@ -172,43 +211,70 @@
         "source": "Auto-Encoding Variational Bayes",
         "source_type": "Paper",
         "relation": "INTRODUCES",
-        "target": "stochastic variational inference and learning algorithm",
+        "target": "Stochastic Variational Inference",
         "target_type": "Technique",
         "confidence": 0.9,
-        "supporting_text": "we introduce a stochastic variational inference and learning algorithm"
+        "supporting_text": "We introduce a stochastic variational inference and learning algorithm"
       },
       {
         "source": "Auto-Encoding Variational Bayes",
         "source_type": "Paper",
-        "relation": "EVALUATES_ON",
-        "target": "i.i.d. datasets",
-        "target_type": "Dataset",
+        "relation": "INTRODUCES",
+        "target": "Reparameterization Trick",
+        "target_type": "Technique",
         "confidence": 0.9,
-        "supporting_text": "for i.i.d. datasets with continuous latent variables per datapoint"
+        "supporting_text": "we show that a reparameterization of the variational lower bound yields a lower bound estimator"
       },
       {
-        "source": "Reparameterization Trick",
+        "source": "Auto-Encoding Variational Bayes",
+        "source_type": "Paper",
+        "relation": "INTRODUCES",
+        "target": "Recognition Model",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "fitting an approximate inference model (also called a recognition model) to the intractable posterior"
+      },
+      {
+        "source": "VAE",
         "source_type": "Technique",
-        "relation": "HAS_LIMITATION",
+        "relation": "USES",
+        "target": "Reparameterization Trick",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "we show that a reparameterization of the variational lower bound"
+      },
+      {
+        "source": "Stochastic Variational Inference",
+        "source_type": "Technique",
+        "relation": "USES",
+        "target": "Recognition Model",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "fitting an approximate inference model (also called a recognition model) to the intractable posterior"
+      },
+      {
+        "source": "Stochastic Variational Inference",
+        "source_type": "Technique",
+        "relation": "MITIGATES",
         "target": "Intractable Posterior Distributions",
         "target_type": "Problem",
-        "confidence": 0.8,
-        "supporting_text": "in the presence of continuous latent variables with intractable posterior distributions"
+        "confidence": 0.9,
+        "supporting_text": "even works in the intractable case"
       },
       {
-        "source": "stochastic variational inference and learning algorithm",
+        "source": "Stochastic Variational Inference",
         "source_type": "Technique",
         "relation": "MITIGATES",
         "target": "Scalability to Large Datasets",
         "target_type": "Problem",
-        "confidence": 0.8,
-        "supporting_text": "that scales to large datasets"
+        "confidence": 0.9,
+        "supporting_text": "scales to large datasets"
       }
     ],
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.9,
-      "reasoning": "The paper introduces a new stochastic variational inference algorithm that addresses intractable posterior distributions in probabilistic models, representing a fundamentally new approach."
+      "reasoning": "The paper introduces a new stochastic variational inference algorithm that addresses intractable posterior distributions in probabilistic models, which constitutes a fundamentally new approach."
     },
     "errors": []
   },
@@ -231,16 +297,30 @@
       {
         "name": "GAN",
         "type": "Technique",
-        "description": "a framework for estimating generative models via an adversarial process involving a generative model G and a discriminative model D",
+        "description": "framework for estimating generative models via an adversarial process",
         "mathematical_structure": "minimax two-player game / adversarial optimization",
         "bottleneck_class": null
       },
       {
-        "name": "training instability",
+        "name": "Backpropagation",
+        "type": "Technique",
+        "description": "training method for multilayer perceptrons G and D",
+        "mathematical_structure": "gradient descent via chain rule",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Training Instability",
         "type": "Problem",
         "description": "the need for a unique solution in the adversarial training process",
         "mathematical_structure": null,
-        "bottleneck_class": "interference_between_adversarial_objectives"
+        "bottleneck_class": "non_unique_solution_in_adversarial_dynamics"
+      },
+      {
+        "name": "Approximate Inference",
+        "type": "Problem",
+        "description": "no need for Markov chains or unrolled approximate inference networks during training or generation",
+        "mathematical_structure": null,
+        "bottleneck_class": "inefficient_inference_methodology"
       }
     ],
     "relations": [
@@ -257,25 +337,25 @@
         "source": "Generative Adversarial Networks",
         "source_type": "Paper",
         "relation": "EVALUATES_ON",
-        "target": "",
+        "target": "dataset",
         "target_type": "Dataset",
         "confidence": 0.7,
-        "supporting_text": "Experiments demonstrate the potential of the framework through qualitative and quantitative evaluation of the generated samples"
+        "supporting_text": "Experiments demonstrate the potential of the framework through qualitative and quantitative evaluation of the generated samples."
       },
       {
         "source": "GAN",
         "source_type": "Technique",
-        "relation": "HAS_LIMITATION",
-        "target": "training instability",
-        "target_type": "Problem",
-        "confidence": 0.7,
+        "relation": "USES",
+        "target": "Backpropagation",
+        "target_type": "Technique",
+        "confidence": 0.9,
         "supporting_text": "the entire system can be trained with backpropagation"
       }
     ],
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.95,
-      "reasoning": "The paper introduces a fundamentally new framework for generative modeling through adversarial training, which is a significant departure from existing methods at the time."
+      "reasoning": "The paper introduces a fundamentally new framework for generative modeling through adversarial training, which is a significant departure from existing methods."
     },
     "errors": []
   },
@@ -299,18 +379,39 @@
         "bottleneck_class": null
       },
       {
-        "name": "training difficulty of deep networks",
+        "name": "Residual Learning",
+        "type": "Technique",
+        "description": "learning residual functions with reference to the layer inputs",
+        "mathematical_structure": "residual function approximation",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Ensemble Methods",
+        "type": "Technique",
+        "description": "an ensemble of residual nets achieves lower error rates",
+        "mathematical_structure": "weighted aggregation of multiple models",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Training Difficulty",
         "type": "Problem",
         "description": "deeper neural networks are more difficult to train",
         "mathematical_structure": null,
         "bottleneck_class": "exponential_signal_decay_across_stages"
       },
       {
-        "name": "optimization of deep networks",
+        "name": "Optimization Challenges",
         "type": "Problem",
-        "description": "residual networks are easier to optimize",
+        "description": "residual networks are easier to optimize compared to traditional networks",
         "mathematical_structure": null,
-        "bottleneck_class": "exponential_signal_decay_across_stages"
+        "bottleneck_class": "interference_between_sequential_learned_representations"
+      },
+      {
+        "name": "Complexity vs. Depth",
+        "type": "Problem",
+        "description": "achieving greater depth while maintaining lower complexity",
+        "mathematical_structure": null,
+        "bottleneck_class": "model_capacity_exceeds_training_signal"
       },
       {
         "name": "ImageNet",
@@ -339,7 +440,7 @@
         "source": "Deep Residual Learning for Image Recognition",
         "source_type": "Paper",
         "relation": "INTRODUCES",
-        "target": "ResNet",
+        "target": "Residual Learning",
         "target_type": "Technique",
         "confidence": 0.9,
         "supporting_text": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously."
@@ -372,28 +473,37 @@
         "supporting_text": "Solely due to our extremely deep representations, we obtain a 28% relative improvement on the COCO object detection dataset."
       },
       {
-        "source": "ResNet",
+        "source": "Residual Learning",
         "source_type": "Technique",
-        "relation": "HAS_LIMITATION",
-        "target": "training difficulty of deep networks",
+        "relation": "MITIGATES",
+        "target": "Training Difficulty",
         "target_type": "Problem",
         "confidence": 0.85,
-        "supporting_text": "Deeper neural networks are more difficult to train."
+        "supporting_text": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously."
+      },
+      {
+        "source": "Residual Learning",
+        "source_type": "Technique",
+        "relation": "MITIGATES",
+        "target": "Optimization Challenges",
+        "target_type": "Problem",
+        "confidence": 0.85,
+        "supporting_text": "We provide comprehensive empirical evidence showing that these residual networks are easier to optimize."
       },
       {
         "source": "ResNet",
         "source_type": "Technique",
-        "relation": "MITIGATES",
-        "target": "optimization of deep networks",
-        "target_type": "Problem",
-        "confidence": 0.85,
-        "supporting_text": "We provide comprehensive empirical evidence showing that these residual networks are easier to optimize."
+        "relation": "USES",
+        "target": "Residual Learning",
+        "target_type": "Technique",
+        "confidence": 0.9,
+        "supporting_text": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously."
       }
     ],
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.9,
-      "reasoning": "The paper introduces a new residual learning framework that fundamentally changes how deeper neural networks are trained, which is a significant advancement in the field."
+      "reasoning": "The paper introduces a fundamentally new residual learning framework that significantly changes how deep neural networks are trained, allowing for much deeper architectures than previously possible."
     },
     "errors": []
   },
@@ -412,42 +522,49 @@
       {
         "name": "BERT",
         "type": "Technique",
-        "description": "a new language representation model designed to pre-train deep bidirectional representations from unlabeled text",
+        "description": "A language representation model designed to pre-train deep bidirectional representations from unlabeled text.",
         "mathematical_structure": "masked language modeling with next sentence prediction",
+        "bottleneck_class": null
+      },
+      {
+        "name": "Transformer",
+        "type": "Technique",
+        "description": "The architecture from which BERT derives its bidirectional representations.",
+        "mathematical_structure": "scaled dot-product attention with softmax normalization",
         "bottleneck_class": null
       },
       {
         "name": "task-specific architecture modifications",
         "type": "Problem",
-        "description": "BERT can be fine-tuned without substantial task-specific architecture modifications",
+        "description": "BERT can be fine-tuned with just one additional output layer without substantial modifications.",
         "mathematical_structure": null,
-        "bottleneck_class": "parameterization_inflexibility_for_specific_tasks"
+        "bottleneck_class": "parameter_count_scaling_with_model_size"
       },
       {
         "name": "GLUE",
         "type": "Dataset",
-        "description": "benchmark for evaluating natural language understanding tasks",
+        "description": "A benchmark for evaluating natural language understanding systems.",
         "mathematical_structure": null,
         "bottleneck_class": null
       },
       {
         "name": "MultiNLI",
         "type": "Dataset",
-        "description": "dataset for natural language inference",
+        "description": "A dataset for natural language inference.",
         "mathematical_structure": null,
         "bottleneck_class": null
       },
       {
         "name": "SQuAD v1.1",
         "type": "Dataset",
-        "description": "dataset for question answering",
+        "description": "A dataset for question answering.",
         "mathematical_structure": null,
         "bottleneck_class": null
       },
       {
         "name": "SQuAD v2.0",
         "type": "Dataset",
-        "description": "dataset for question answering with unanswerable questions",
+        "description": "An updated version of the SQuAD dataset for question answering.",
         "mathematical_structure": null,
         "bottleneck_class": null
       }
@@ -501,17 +618,17 @@
       {
         "source": "BERT",
         "source_type": "Technique",
-        "relation": "MITIGATES",
-        "target": "task-specific architecture modifications",
-        "target_type": "Problem",
-        "confidence": 0.85,
-        "supporting_text": "without substantial task-specific architecture modifications"
+        "relation": "USES",
+        "target": "Transformer",
+        "target_type": "Technique",
+        "confidence": 0.8,
+        "supporting_text": "BERT, which stands for Bidirectional Encoder Representations from Transformers"
       }
     ],
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.9,
-      "reasoning": "The paper introduces BERT, a fundamentally new language representation model that utilizes deep bidirectional transformers, which is a significant advancement in the field of natural language processing."
+      "reasoning": "The paper introduces BERT, a fundamentally new language representation model that utilizes deep bidirectional transformers for pre-training, which is a significant departure from previous methods."
     },
     "errors": []
   }

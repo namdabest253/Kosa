@@ -34,6 +34,7 @@ RELATION_DIRECTION_RULES: dict[str, tuple[str, str]] = {
     "HAS_LIMITATION": ("technique", "problem"),
     "MITIGATES": ("technique", "problem"),
     "IMPROVES_OVER": ("technique", "technique"),
+    "USES": ("technique", "technique"),
     "IS_INSTANCE_OF": ("technique|problem", "technique|problem"),
     "CAUSED_BY": ("problem", "problem"),
     "TEMPORALLY_FOLLOWS": ("technique", "technique"),

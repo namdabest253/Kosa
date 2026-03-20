@@ -39,6 +39,7 @@ class EdgeType(StrEnum):
     HAS_LIMITATION = "HAS_LIMITATION"  # Technique → Problem
     MITIGATES = "MITIGATES"  # Technique → Problem
     IMPROVES_OVER = "IMPROVES_OVER"  # Technique → Technique
+    USES = "USES"  # Technique → Technique (compositional: A is built with B)
     IS_INSTANCE_OF = "IS_INSTANCE_OF"  # Problem → Problem, Technique → Technique
     CAUSED_BY = "CAUSED_BY"  # Problem → Problem
     TEMPORALLY_FOLLOWS = "TEMPORALLY_FOLLOWS"  # Technique → Technique
@@ -58,6 +59,7 @@ EDGE_SCHEMA: list[tuple[NodeLabel, EdgeType, NodeLabel]] = [
     (NodeLabel.TECHNIQUE, EdgeType.HAS_LIMITATION, NodeLabel.PROBLEM),
     (NodeLabel.TECHNIQUE, EdgeType.MITIGATES, NodeLabel.PROBLEM),
     (NodeLabel.TECHNIQUE, EdgeType.IMPROVES_OVER, NodeLabel.TECHNIQUE),
+    (NodeLabel.TECHNIQUE, EdgeType.USES, NodeLabel.TECHNIQUE),
     (NodeLabel.PROBLEM, EdgeType.IS_INSTANCE_OF, NodeLabel.PROBLEM),
     (NodeLabel.TECHNIQUE, EdgeType.IS_INSTANCE_OF, NodeLabel.TECHNIQUE),
     (NodeLabel.PROBLEM, EdgeType.CAUSED_BY, NodeLabel.PROBLEM),

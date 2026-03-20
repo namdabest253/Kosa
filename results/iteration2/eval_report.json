@@ -1,0 +1,519 @@
+{
+  "schema_checks": [
+    {
+      "paper_id": "1706.03762",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "paper_id": "1312.6114",
+      "passed": true,
+      "issues": [
+        "Fake/generic dataset: 'i.i.d. datasets'"
+      ]
+    },
+    {
+      "paper_id": "1406.2661",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "paper_id": "1512.03385",
+      "passed": true,
+      "issues": []
+    },
+    {
+      "paper_id": "1810.04805",
+      "passed": true,
+      "issues": []
+    }
+  ],
+  "llm_judgments": [
+    {
+      "paper_id": "1706.03762",
+      "entity_accuracy": 1.0,
+      "relation_accuracy": 0.8333333333333334,
+      "entity_verdicts": [
+        {
+          "name": "Transformer",
+          "type": "Technique",
+          "correct": true,
+          "has_math_structure": true,
+          "reason": "The Transformer is a central technique introduced in the paper, described as a new architecture based on attention mechanisms."
+        },
+        {
+          "name": "model complexity",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "The paper discusses the complexity of existing models and how the Transformer addresses this issue."
+        },
+        {
+          "name": "training time",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "The paper mentions that existing models require more training time, which the Transformer aims to reduce."
+        },
+        {
+          "name": "generalization",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "Generalization is discussed in the context of the Transformer's ability to perform well on tasks beyond translation."
+        },
+        {
+          "name": "WMT 2014 English-to-German",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "This dataset is used in the paper to evaluate the performance of the Transformer."
+        },
+        {
+          "name": "WMT 2014 English-to-French",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "This dataset is used in the paper to evaluate the performance of the Transformer."
+        }
+      ],
+      "relation_verdicts": [
+        {
+          "source": "Attention Is All You Need",
+          "relation": "INTRODUCES",
+          "target": "Transformer",
+          "correct": true,
+          "reason": "The paper introduces the Transformer as a new architecture."
+        },
+        {
+          "source": "Attention Is All You Need",
+          "relation": "EVALUATES_ON",
+          "target": "WMT 2014 English-to-German",
+          "correct": true,
+          "reason": "The paper evaluates the Transformer on this dataset."
+        },
+        {
+          "source": "Attention Is All You Need",
+          "relation": "EVALUATES_ON",
+          "target": "WMT 2014 English-to-French",
+          "correct": true,
+          "reason": "The paper evaluates the Transformer on this dataset."
+        },
+        {
+          "source": "Transformer",
+          "relation": "MITIGATES",
+          "target": "model complexity",
+          "correct": true,
+          "reason": "The Transformer reduces model complexity by eliminating recurrence and convolutions."
+        },
+        {
+          "source": "Transformer",
+          "relation": "MITIGATES",
+          "target": "training time",
+          "correct": true,
+          "reason": "The Transformer requires less training time compared to previous models."
+        },
+        {
+          "source": "Transformer",
+          "relation": "HAS_LIMITATION",
+          "target": "generalization",
+          "correct": false,
+          "reason": "The paper suggests that the Transformer generalizes well, so this relation is incorrect."
+        }
+      ],
+      "missing_entities": [
+        {
+          "name": "Attention Mechanism",
+          "type": "Technique",
+          "reason": "The paper emphasizes the use of attention mechanisms as a core component of the Transformer."
+        }
+      ],
+      "missing_relations": [
+        {
+          "source": "Transformer",
+          "relation": "USES",
+          "target": "Attention Mechanism",
+          "reason": "The Transformer is based on attention mechanisms, which is a key aspect of its architecture."
+        }
+      ]
+    },
+    {
+      "paper_id": "1312.6114",
+      "entity_accuracy": 0.8,
+      "relation_accuracy": 0.5,
+      "entity_verdicts": [
+        {
+          "name": "VAE",
+          "type": "Technique",
+          "correct": true,
+          "has_math_structure": true,
+          "reason": "VAE is a well-known technique discussed in the context of variational inference and learning."
+        },
+        {
+          "name": "Reparameterization Trick",
+          "type": "Technique",
+          "correct": true,
+          "has_math_structure": true,
+          "reason": "The reparameterization trick is a technique used in variational inference to optimize the variational lower bound."
+        },
+        {
+          "name": "Intractable Posterior Distributions",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "Intractable posterior distributions are a common problem in probabilistic models, which the paper addresses."
+        },
+        {
+          "name": "Scalability to Large Datasets",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "Scalability is a key problem addressed by the proposed algorithm in the paper."
+        },
+        {
+          "name": "i.i.d. datasets",
+          "type": "Dataset",
+          "correct": false,
+          "has_math_structure": false,
+          "reason": "The term 'i.i.d. datasets' is too generic and not a specific dataset; it refers to a property of datasets."
+        }
+      ],
+      "relation_verdicts": [
+        {
+          "source": "Auto-Encoding Variational Bayes",
+          "relation": "INTRODUCES",
+          "target": "stochastic variational inference and learning algorithm",
+          "correct": true,
+          "reason": "The paper introduces this algorithm, as supported by the abstract."
+        },
+        {
+          "source": "Auto-Encoding Variational Bayes",
+          "relation": "EVALUATES_ON",
+          "target": "i.i.d. datasets",
+          "correct": false,
+          "reason": "The term 'i.i.d. datasets' is not a specific dataset, making this relation incorrect."
+        },
+        {
+          "source": "Reparameterization Trick",
+          "relation": "HAS_LIMITATION",
+          "target": "Intractable Posterior Distributions",
+          "correct": false,
+          "reason": "The reparameterization trick is used to address intractable posteriors, not limited by them."
+        },
+        {
+          "source": "stochastic variational inference and learning algorithm",
+          "relation": "MITIGATES",
+          "target": "Scalability to Large Datasets",
+          "correct": true,
+          "reason": "The algorithm is designed to scale to large datasets, addressing this problem."
+        }
+      ],
+      "missing_entities": [
+        {
+          "name": "Auto-Encoding Variational Bayes",
+          "type": "Technique",
+          "reason": "The paper's title suggests it introduces a specific technique, which should be recognized as an entity."
+        }
+      ],
+      "missing_relations": [
+        {
+          "source": "VAE",
+          "relation": "USES",
+          "target": "Reparameterization Trick",
+          "reason": "The VAE technique relies on the reparameterization trick, which is a key aspect of its implementation."
+        }
+      ]
+    },
+    {
+      "paper_id": "1406.2661",
+      "entity_accuracy": 1.0,
+      "relation_accuracy": 0.6666666666666666,
+      "entity_verdicts": [
+        {
+          "name": "GAN",
+          "type": "Technique",
+          "correct": true,
+          "has_math_structure": true,
+          "reason": "The entity 'GAN' is correctly identified as a technique. It is a framework for generative models using adversarial processes, which is consistent with the description."
+        },
+        {
+          "name": "training instability",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "The entity 'training instability' is correctly identified as a problem associated with GANs. The description aligns with known issues in adversarial training."
+        }
+      ],
+      "relation_verdicts": [
+        {
+          "source": "Generative Adversarial Networks",
+          "relation": "INTRODUCES",
+          "target": "GAN",
+          "correct": true,
+          "reason": "The relation is correct as the paper introduces the GAN framework, which is supported by the abstract text."
+        },
+        {
+          "source": "Generative Adversarial Networks",
+          "relation": "EVALUATES_ON",
+          "target": "generated samples",
+          "correct": false,
+          "reason": "The target 'generated samples' is not a dataset but rather the output of the GAN. The relation type 'EVALUATES_ON' is inappropriate here."
+        },
+        {
+          "source": "GAN",
+          "relation": "HAS_LIMITATION",
+          "target": "training instability",
+          "correct": true,
+          "reason": "The relation correctly identifies 'training instability' as a limitation of GANs, supported by the context of adversarial training challenges."
+        }
+      ],
+      "missing_entities": [
+        {
+          "name": "Discriminative Model",
+          "type": "Technique",
+          "reason": "The discriminative model is a key component of GANs, working alongside the generative model in the adversarial process."
+        },
+        {
+          "name": "Generative Model",
+          "type": "Technique",
+          "reason": "The generative model is a fundamental part of the GAN framework, responsible for generating data samples."
+        }
+      ],
+      "missing_relations": [
+        {
+          "source": "GAN",
+          "relation": "USES",
+          "target": "Discriminative Model",
+          "reason": "The GAN framework involves a discriminative model, which is crucial for the adversarial process."
+        },
+        {
+          "source": "GAN",
+          "relation": "USES",
+          "target": "Generative Model",
+          "reason": "The GAN framework involves a generative model, which is essential for generating data samples."
+        }
+      ]
+    },
+    {
+      "paper_id": "1512.03385",
+      "entity_accuracy": 1.0,
+      "relation_accuracy": 0.8571428571428571,
+      "entity_verdicts": [
+        {
+          "name": "ResNet",
+          "type": "Technique",
+          "correct": true,
+          "has_math_structure": true,
+          "reason": "ResNet is a well-known technique introduced in the paper for residual learning."
+        },
+        {
+          "name": "training difficulty of deep networks",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "The paper discusses the difficulty of training deeper networks, which is a recognized problem."
+        },
+        {
+          "name": "complexity of deeper networks",
+          "type": "Problem",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "The paper addresses the complexity issue in deeper networks, making it a valid problem entity."
+        },
+        {
+          "name": "ImageNet",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "ImageNet is a dataset used for evaluation in the paper."
+        },
+        {
+          "name": "CIFAR-10",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "CIFAR-10 is another dataset used for analysis in the paper."
+        },
+        {
+          "name": "COCO",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "COCO is mentioned as a dataset where improvements were observed."
+        }
+      ],
+      "relation_verdicts": [
+        {
+          "source": "Deep Residual Learning for Image Recognition",
+          "relation": "INTRODUCES",
+          "target": "ResNet",
+          "correct": true,
+          "reason": "The paper introduces ResNet as a new technique."
+        },
+        {
+          "source": "Deep Residual Learning for Image Recognition",
+          "relation": "EVALUATES_ON",
+          "target": "ImageNet",
+          "correct": true,
+          "reason": "The paper evaluates ResNet on the ImageNet dataset."
+        },
+        {
+          "source": "Deep Residual Learning for Image Recognition",
+          "relation": "EVALUATES_ON",
+          "target": "CIFAR-10",
+          "correct": true,
+          "reason": "The paper evaluates ResNet on the CIFAR-10 dataset."
+        },
+        {
+          "source": "Deep Residual Learning for Image Recognition",
+          "relation": "EVALUATES_ON",
+          "target": "COCO",
+          "correct": true,
+          "reason": "The paper evaluates ResNet on the COCO dataset."
+        },
+        {
+          "source": "ResNet",
+          "relation": "HAS_LIMITATION",
+          "target": "training difficulty of deep networks",
+          "correct": false,
+          "reason": "ResNet is designed to mitigate, not have, the limitation of training difficulty."
+        },
+        {
+          "source": "ResNet",
+          "relation": "MITIGATES",
+          "target": "training difficulty of deep networks",
+          "correct": true,
+          "reason": "ResNet is specifically designed to ease the training of deeper networks."
+        },
+        {
+          "source": "ResNet",
+          "relation": "MITIGATES",
+          "target": "complexity of deeper networks",
+          "correct": true,
+          "reason": "ResNet aims to reduce complexity while increasing depth."
+        }
+      ],
+      "missing_entities": [],
+      "missing_relations": []
+    },
+    {
+      "paper_id": "1810.04805",
+      "entity_accuracy": 0.8333333333333334,
+      "relation_accuracy": 0.8333333333333334,
+      "entity_verdicts": [
+        {
+          "name": "BERT",
+          "type": "Technique",
+          "correct": true,
+          "has_math_structure": true,
+          "reason": "BERT is a language representation model discussed in the paper, and the mathematical structure of masked language modeling with next sentence prediction is appropriate."
+        },
+        {
+          "name": "task-specific architecture modifications",
+          "type": "Problem",
+          "correct": false,
+          "has_math_structure": false,
+          "reason": "This is not a problem but rather a feature of BERT's design. It should not be classified as a 'Problem'."
+        },
+        {
+          "name": "GLUE",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "GLUE is a benchmark dataset mentioned in the paper for evaluating natural language understanding tasks."
+        },
+        {
+          "name": "MultiNLI",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "MultiNLI is a dataset for natural language inference mentioned in the paper."
+        },
+        {
+          "name": "SQuAD v1.1",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "SQuAD v1.1 is a dataset for question answering mentioned in the paper."
+        },
+        {
+          "name": "SQuAD v2.0",
+          "type": "Dataset",
+          "correct": true,
+          "has_math_structure": false,
+          "reason": "SQuAD v2.0 is a dataset for question answering with unanswerable questions mentioned in the paper."
+        }
+      ],
+      "relation_verdicts": [
+        {
+          "source": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "relation": "INTRODUCES",
+          "target": "BERT",
+          "correct": true,
+          "reason": "The paper introduces BERT as a new language representation model, supported by the text."
+        },
+        {
+          "source": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "relation": "EVALUATES_ON",
+          "target": "GLUE",
+          "correct": true,
+          "reason": "The paper evaluates BERT on the GLUE dataset, as supported by the text."
+        },
+        {
+          "source": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "relation": "EVALUATES_ON",
+          "target": "MultiNLI",
+          "correct": true,
+          "reason": "The paper evaluates BERT on the MultiNLI dataset, as supported by the text."
+        },
+        {
+          "source": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "relation": "EVALUATES_ON",
+          "target": "SQuAD v1.1",
+          "correct": true,
+          "reason": "The paper evaluates BERT on the SQuAD v1.1 dataset, as supported by the text."
+        },
+        {
+          "source": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+          "relation": "EVALUATES_ON",
+          "target": "SQuAD v2.0",
+          "correct": true,
+          "reason": "The paper evaluates BERT on the SQuAD v2.0 dataset, as supported by the text."
+        },
+        {
+          "source": "BERT",
+          "relation": "MITIGATES",
+          "target": "task-specific architecture modifications",
+          "correct": false,
+          "reason": "The relation is incorrect because 'task-specific architecture modifications' is not a problem but a feature of BERT's design."
+        }
+      ],
+      "missing_entities": [
+        {
+          "name": "masked language modeling",
+          "type": "Technique",
+          "reason": "This is a key component of BERT's pre-training process and should be extracted as a technique."
+        },
+        {
+          "name": "next sentence prediction",
+          "type": "Technique",
+          "reason": "This is another key component of BERT's pre-training process and should be extracted as a technique."
+        }
+      ],
+      "missing_relations": [
+        {
+          "source": "BERT",
+          "relation": "USES",
+          "target": "masked language modeling",
+          "reason": "BERT uses masked language modeling as part of its pre-training process."
+        },
+        {
+          "source": "BERT",
+          "relation": "USES",
+          "target": "next sentence prediction",
+          "reason": "BERT uses next sentence prediction as part of its pre-training process."
+        }
+      ]
+    }
+  ]
+}

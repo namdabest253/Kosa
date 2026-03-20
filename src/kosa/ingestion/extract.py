@@ -20,6 +20,7 @@ import httpx
 from openai import OpenAI
 
 from kosa.graph.schema import EdgeType, NodeLabel, get_venue_weight
+from kosa.ingestion.evaluate import RELATION_DIRECTION_RULES
 from kosa.ingestion.prompts import (
     RELATION_TYPE_MAP,
     SOURCE_TYPE_MAP,
@@ -308,6 +309,55 @@ def extract_paper(
     _, venue_weight = get_venue_weight(venue)
 
     for rel in relations_raw:
+        # Drop self-referential relations
+        if rel.get("source", "") == rel.get("target", "") and rel.get("source_type", "") == rel.get(
+            "target_type", ""
+        ):
+            src = rel.get("source")
+            tgt = rel.get("target")
+            result.errors.append(
+                f"Dropped self-referential relation: {src} → {rel.get('relation')} → {tgt}"
+            )
+            continue
+
+        # Validate direction rules before accepting the relation
+        rel_type_str = rel.get("relation", "")
+        src_type_str = rel.get("source_type", "").lower()
+        tgt_type_str = rel.get("target_type", "").lower()
+        expected = RELATION_DIRECTION_RULES.get(rel_type_str)
+        if expected is not None:
+            expected_src, expected_tgt = expected
+            src_ok = src_type_str in expected_src.split("|")
+            tgt_ok = tgt_type_str in expected_tgt.split("|")
+            if not (src_ok and tgt_ok):
+                result.errors.append(
+                    f"Dropped relation with wrong types: "
+                    f"{src_type_str} → {rel_type_str} → {tgt_type_str} "
+                    f"(expected {expected_src} → {expected_tgt})"
+                )
+                continue
+        # Drop vague IMPROVES_OVER targets
+        if rel_type_str == "IMPROVES_OVER":
+            target = rel.get("target", "").lower()
+            vague_targets = {
+                "existing methods",
+                "previous approaches",
+                "prior work",
+                "existing best results",
+                "baseline",
+                "baselines",
+                "existing models",
+                "previous methods",
+                "state-of-the-art",
+                "existing approaches",
+                "traditional methods",
+            }
+            if target in vague_targets:
+                result.errors.append(
+                    f"Dropped vague IMPROVES_OVER: {rel.get('source')} → {rel.get('target')}"
+                )
+                continue
+
         source_type = SOURCE_TYPE_MAP.get(rel.get("source_type", ""))
         target_type = SOURCE_TYPE_MAP.get(rel.get("target_type", ""))
         relation_type = RELATION_TYPE_MAP.get(rel.get("relation", ""))

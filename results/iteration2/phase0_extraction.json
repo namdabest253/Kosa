@@ -37,9 +37,9 @@
         "bottleneck_class": "parameter_count_scaling_with_model_size"
       },
       {
-        "name": "task generalization",
+        "name": "generalization",
         "type": "Problem",
-        "description": "the need for models that generalize well to other tasks",
+        "description": "the need for models that generalize well to tasks beyond translation",
         "mathematical_structure": null,
         "bottleneck_class": "interference_between_sequential_learned_representations"
       },
@@ -92,7 +92,7 @@
         "relation": "MITIGATES",
         "target": "model complexity",
         "target_type": "Problem",
-        "confidence": 0.85,
+        "confidence": 0.8,
         "supporting_text": "dispensing with recurrence and convolutions entirely."
       },
       {
@@ -101,16 +101,16 @@
         "relation": "MITIGATES",
         "target": "training time",
         "target_type": "Problem",
-        "confidence": 0.85,
+        "confidence": 0.8,
         "supporting_text": "requiring significantly less time to train."
       },
       {
         "source": "Transformer",
         "source_type": "Technique",
-        "relation": "MITIGATES",
-        "target": "task generalization",
+        "relation": "HAS_LIMITATION",
+        "target": "generalization",
         "target_type": "Problem",
-        "confidence": 0.85,
+        "confidence": 0.7,
         "supporting_text": "We show that the Transformer generalizes well to other tasks."
       }
     ],
@@ -175,7 +175,7 @@
         "target": "stochastic variational inference and learning algorithm",
         "target_type": "Technique",
         "confidence": 0.9,
-        "supporting_text": "we introduce a stochastic variational inference and learning algorithm"
+        "supporting_text": "We introduce a stochastic variational inference and learning algorithm that scales to large datasets"
       },
       {
         "source": "Auto-Encoding Variational Bayes",
@@ -240,7 +240,7 @@
         "type": "Problem",
         "description": "the need for a unique solution in the adversarial training process",
         "mathematical_structure": null,
-        "bottleneck_class": "interference_between_adversarial_objectives"
+        "bottleneck_class": "non_unique_solution_in_adversarial_training"
       }
     ],
     "relations": [
@@ -257,10 +257,10 @@
         "source": "Generative Adversarial Networks",
         "source_type": "Paper",
         "relation": "EVALUATES_ON",
-        "target": "",
+        "target": "generated samples",
         "target_type": "Dataset",
-        "confidence": 0.7,
-        "supporting_text": "Experiments demonstrate the potential of the framework through qualitative and quantitative evaluation of the generated samples"
+        "confidence": 0.8,
+        "supporting_text": "Experiments demonstrate the potential of the framework through qualitative and quantitative evaluation of the generated samples."
       },
       {
         "source": "GAN",
@@ -269,13 +269,13 @@
         "target": "training instability",
         "target_type": "Problem",
         "confidence": 0.7,
-        "supporting_text": "the entire system can be trained with backpropagation"
+        "supporting_text": "the entire system can be trained with backpropagation. There is no need for any Markov chains or unrolled approximate inference networks during either training or generation of samples."
       }
     ],
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.95,
-      "reasoning": "The paper introduces a fundamentally new framework for generative modeling through adversarial training, which is a significant departure from existing methods at the time."
+      "reasoning": "The paper introduces a fundamentally new framework for generative modeling through adversarial training, which is a significant departure from existing methods."
     },
     "errors": []
   },
@@ -306,11 +306,11 @@
         "bottleneck_class": "exponential_signal_decay_across_stages"
       },
       {
-        "name": "optimization of deep networks",
+        "name": "complexity of deeper networks",
         "type": "Problem",
-        "description": "residual networks are easier to optimize",
+        "description": "achieving lower complexity while increasing depth",
         "mathematical_structure": null,
-        "bottleneck_class": "exponential_signal_decay_across_stages"
+        "bottleneck_class": "model_capacity_exceeds_training_signal"
       },
       {
         "name": "ImageNet",
@@ -384,16 +384,25 @@
         "source": "ResNet",
         "source_type": "Technique",
         "relation": "MITIGATES",
-        "target": "optimization of deep networks",
+        "target": "training difficulty of deep networks",
+        "target_type": "Problem",
+        "confidence": 0.9,
+        "supporting_text": "We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously."
+      },
+      {
+        "source": "ResNet",
+        "source_type": "Technique",
+        "relation": "MITIGATES",
+        "target": "complexity of deeper networks",
         "target_type": "Problem",
         "confidence": 0.85,
-        "supporting_text": "We provide comprehensive empirical evidence showing that these residual networks are easier to optimize."
+        "supporting_text": "but still having lower complexity."
       }
     ],
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.9,
-      "reasoning": "The paper introduces a new residual learning framework that fundamentally changes how deeper neural networks are trained, which is a significant advancement in the field."
+      "reasoning": "The paper introduces a fundamentally new residual learning framework that significantly changes how deep neural networks are trained, allowing for much deeper architectures than previously possible."
     },
     "errors": []
   },
@@ -412,7 +421,7 @@
       {
         "name": "BERT",
         "type": "Technique",
-        "description": "a new language representation model designed to pre-train deep bidirectional representations from unlabeled text",
+        "description": "a language representation model designed to pre-train deep bidirectional representations from unlabeled text",
         "mathematical_structure": "masked language modeling with next sentence prediction",
         "bottleneck_class": null
       },
@@ -511,7 +520,7 @@
     "novelty": {
       "classification": "novel_technique",
       "confidence": 0.9,
-      "reasoning": "The paper introduces BERT, a fundamentally new language representation model that utilizes deep bidirectional transformers, which is a significant advancement in the field of natural language processing."
+      "reasoning": "The paper introduces BERT, a fundamentally new model for language representation that utilizes deep bidirectional training, which is a significant departure from previous methods."
     },
     "errors": []
   }

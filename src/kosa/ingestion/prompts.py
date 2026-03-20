@@ -37,7 +37,10 @@ For example, if a paper says "existing models require O(n²) memory", extract th
 - **dataset**: A specific, named evaluation dataset or benchmark. \
 Must be a real, citable dataset with a proper name. \
 Do NOT extract generic descriptions like "i.i.d. datasets" or "large-scale data" — \
-only named benchmarks (e.g., "ImageNet", "MMLU", "LibriSpeech", "WMT 2014 En-De").
+only named benchmarks (e.g., "ImageNet", "MMLU", "LibriSpeech", "WMT 2014 En-De"). \
+Do NOT extract task NAMES as datasets. "translation", "question-answering", "OCR", \
+"action recognition", "object detection" are TASKS, not datasets. Only extract \
+datasets that have a specific proper name (e.g., "WMT 2014 En-De" not "translation").
 
 Rules:
 - Extract only entities explicitly mentioned or clearly implied by the text.
@@ -46,6 +49,11 @@ Rules:
 - The paper's title is NOT a technique name. Extract the technique the paper introduces, which may have the same name but is a method, not a document.
 - Each entity should appear only once in your output.
 - Aim for completeness: a typical ML paper mentions 3-8 techniques, 1-4 problems, and 2-6 datasets.
+- IMPORTANT: Extract COMPONENT techniques that the main technique is built from. \
+For example, if a paper introduces "Transformer", also extract "self-attention" and "positional encoding". \
+If a paper introduces "BERT", also extract "masked language modeling" and "next sentence prediction". \
+If a paper introduces "ResNet", also extract "skip connections". \
+These building-block techniques are essential for capturing compositional USES relationships.
 
 Respond with valid JSON only. No markdown, no explanation."""
 
@@ -79,10 +87,18 @@ Valid relationship types with STRICT direction rules:
 Use the paper title as the source name.
 - EVALUATES_ON: The PAPER evaluates on a dataset. Source MUST be "paper", target MUST be "dataset". \
 Use the paper title as the source name.
-- HAS_LIMITATION: A technique has a limitation. Source MUST be "technique", target MUST be "problem".
-- MITIGATES: A technique addresses a problem. Source MUST be "technique", target MUST be "problem".
+- HAS_LIMITATION: A technique has a known weakness or drawback. Source MUST be "technique", target MUST be "problem". \
+IMPORTANT: Only use HAS_LIMITATION for limitations OF the technique itself, NOT for problems the technique was \
+designed to solve. If the paper says "technique X addresses problem Y", that is MITIGATES, not HAS_LIMITATION. \
+HAS_LIMITATION is for: "despite its success, X still suffers from Y" or "X has the drawback of Y".
+- MITIGATES: A technique addresses/solves a problem. Source MUST be "technique", target MUST be "problem". \
+Use this when the paper's main contribution solves or reduces a stated problem.
 - IMPROVES_OVER: A technique improves upon another SPECIFIC technique. Source and target MUST both be "technique". \
 Target must be a specific named technique, NOT a vague phrase like "existing methods" or "previous approaches".
+- USES: A technique is built with / employs / relies on another technique as a component. \
+Source and target MUST both be "technique". \
+Example: "Transformer USES self-attention", "BERT USES masked language modeling", "ResNet USES skip connections". \
+This captures compositional relationships — what building blocks a technique is made of.
 - IS_INSTANCE_OF: An entity is a specific case of a more general entity. \
 Valid: technique→technique, problem→problem.
 - CAUSED_BY: A problem is caused by another problem. Source and target MUST both be "problem".
@@ -113,6 +129,10 @@ Extracted entities:
 Extract all relationships. Remember:
 - For INTRODUCES: source is the paper title ("{title}") with source_type "paper"
 - For EVALUATES_ON: source is the paper title ("{title}") with source_type "paper"
+- For USES: identify what building-block techniques each technique relies on. \
+Every major technique is built from sub-techniques. E.g., "Transformer USES self-attention", \
+"BERT USES masked language modeling", "ResNet USES skip connections", "VAE USES reparameterization trick". \
+Extract ALL compositional USES relations between the extracted techniques.
 - NEVER create self-referential relations (source == target)
 - IMPROVES_OVER target must be a specific named technique, not "existing methods"
 
@@ -122,7 +142,7 @@ Output format:
     {{
       "source": "entity or paper name",
       "source_type": "paper|technique|problem|dataset",
-      "relation": "INTRODUCES|EVALUATES_ON|HAS_LIMITATION|MITIGATES|IMPROVES_OVER|IS_INSTANCE_OF|CAUSED_BY|TEMPORALLY_FOLLOWS",
+      "relation": "INTRODUCES|EVALUATES_ON|HAS_LIMITATION|MITIGATES|IMPROVES_OVER|USES|IS_INSTANCE_OF|CAUSED_BY|TEMPORALLY_FOLLOWS",
       "target": "entity name",
       "target_type": "paper|technique|problem|dataset",
       "confidence": 0.85,
@@ -253,6 +273,7 @@ RELATION_TYPE_MAP = {
     "HAS_LIMITATION": EdgeType.HAS_LIMITATION,
     "MITIGATES": EdgeType.MITIGATES,
     "IMPROVES_OVER": EdgeType.IMPROVES_OVER,
+    "USES": EdgeType.USES,
     "IS_INSTANCE_OF": EdgeType.IS_INSTANCE_OF,
     "CAUSED_BY": EdgeType.CAUSED_BY,
     "TEMPORALLY_FOLLOWS": EdgeType.TEMPORALLY_FOLLOWS,
