@@ -46,16 +46,16 @@ Ingestion → Graph Store → Activation Wave → Agent Evaluation → Ranked Ou
 ```
 
 **Backend Modules:**
-- `ingestion/` — Paper parsing, citation fetching (Semantic Scholar), entity/relation extraction via LLM (cheap model)
+- `ingestion/` — Paper parsing, citation fetching (Semantic Scholar), entity/relation extraction via LLM (cheap model), streaming incremental ingestion with watermark tracking
 - `graph/` — Neo4j schema, CRUD, batch loader, Leiden clustering
 - `entity_resolution/` — First-class dedup with own precision/recall metrics
 - `activation/` — Typed random walk, embedding similarity, blast radius computation
 - `agents/` — Hypothesis and project idea generation (expensive model)
 - `ranking/` — Pairwise Elo ranking, structural feasibility, novelty detection
-- `api/` — FastAPI routes: graph query, hypothesis generation, activation, stats (Phase 2)
+- `api/` — FastAPI routes: graph query, hypothesis generation, activation, stats, streaming ingestion (Phase 2) with rate limiting
 
 **Frontend:**
-- `web/` — React + TypeScript UI with Sigma.js graph visualization, recharts dashboard (Phase 2)
+- `web/` — React + TypeScript UI with Sigma.js graph visualization (circular initial layout, force-directed drag-based refinement, depth control, double-click expand, node/edge type filtering with color coding), recharts dashboard (Phase 2)
 
 ## Tech Stack
 
@@ -67,11 +67,11 @@ Ingestion → Graph Store → Activation Wave → Agent Evaluation → Ranked Ou
 - **GPT-4o** — Hypothesis generation, ranking, and extraction quality evaluation
 
 **Web Layer (Phase 2):**
-- **FastAPI** — REST API with async Neo4j driver, CORS middleware
-- **React 18 + TypeScript** — Web frontend (src-layout in `web/` directory)
-- **Sigma.js** — Interactive graph visualization with pan, zoom, hover
+- **FastAPI** — REST API with async Neo4j driver, CORS middleware, rate limiting
+- **React 18 + TypeScript** — Web frontend (src-layout in `web/` directory) with dark/light mode support, keyboard shortcuts (/ or Ctrl+K to search, 1/2/3 for tabs, Escape to close), graph controls (depth slider for expansion depth, double-click to expand nodes, drag-based interactive layout with connected-node pull and smooth repulsion)
+- **Sigma.js** — Interactive graph visualization with pan, zoom, hover, dynamic filter panel (node types, confidence thresholds), circular initial layout with force-directed refinement
 - **Recharts** — Dashboard charts and statistics
-- **python-igraph** — ForceAtlas2 layout computation via `compute_layout.py`
+- **python-igraph** — Optional ForceAtlas2 layout pre-computation via `compute_layout.py` (deferred for Phase 2+)
 - **Uvicorn** — ASGI server
 
 ## Graph Schema (Phase 1)
@@ -94,7 +94,7 @@ All edges carry provenance: confidence score, source paper, source venue, venue 
 
 **Phase 1.5** — Batch multi-agent debate on same static KG. Pairwise Elo ranking. Falsification gates.
 
-**Phase 2** — FastAPI web service + React frontend (Sigma.js graph viz, recharts dashboard). ForceAtlas2 layout pre-computation. Streaming arXiv ingestion. LightRAG incremental updates. Scaled evaluation.
+**Phase 2** — FastAPI web service + React frontend (Sigma.js graph viz with depth control and double-click expand, recharts dashboard). Streaming arXiv ingestion. LightRAG incremental updates. Scaled evaluation. ForceAtlas2 pre-computation optional, deferred to Phase 2+.
 
 **Phase 3** — Feedback-driven self-improvement. Expand beyond ML/AI domain.
 

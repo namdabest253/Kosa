@@ -12,15 +12,19 @@ import {
 } from "recharts";
 import { getDashboard, type DashboardData } from "../lib/api";
 import { NODE_COLORS } from "../lib/colors";
+import { useTheme, type Theme } from "../lib/theme";
 
 export default function Dashboard() {
+  const theme = useTheme();
   const [data, setData] = useState<DashboardData | null>(null);
 
   useEffect(() => {
     getDashboard().then(setData).catch(console.error);
   }, []);
 
-  if (!data) return <div style={styles.loading}>Loading dashboard...</div>;
+  const s = mkStyles(theme);
+
+  if (!data) return <div style={s.loading}>Loading dashboard...</div>;
 
   const nodeData = Object.entries(data.graph.node_counts).map(([type, count]) => ({
     name: type,
@@ -37,33 +41,33 @@ export default function Dashboard() {
     .sort((a, b) => a.year - b.year);
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Dashboard</h2>
+    <div style={s.container}>
+      <h2 style={s.heading}>Dashboard</h2>
 
-      <div style={styles.grid}>
-        <div style={styles.stat}>
-          <div style={styles.statValue}>{data.graph.total_nodes.toLocaleString()}</div>
-          <div style={styles.statLabel}>Total Nodes</div>
+      <div style={s.grid}>
+        <div style={s.stat}>
+          <div style={s.statValue}>{data.graph.total_nodes.toLocaleString()}</div>
+          <div style={s.statLabel}>Total Nodes</div>
         </div>
-        <div style={styles.stat}>
-          <div style={styles.statValue}>{data.graph.total_edges.toLocaleString()}</div>
-          <div style={styles.statLabel}>Total Edges</div>
+        <div style={s.stat}>
+          <div style={s.statValue}>{data.graph.total_edges.toLocaleString()}</div>
+          <div style={s.statLabel}>Total Edges</div>
         </div>
-        <div style={styles.stat}>
-          <div style={styles.statValue}>{data.hypotheses.total}</div>
-          <div style={styles.statLabel}>Hypotheses</div>
+        <div style={s.stat}>
+          <div style={s.statValue}>{data.hypotheses.total}</div>
+          <div style={s.statLabel}>Hypotheses</div>
         </div>
-        <div style={styles.stat}>
-          <div style={styles.statValue}>
+        <div style={s.stat}>
+          <div style={s.statValue}>
             {data.hypotheses.avg_elo?.toFixed(0) ?? "-"}
           </div>
-          <div style={styles.statLabel}>Avg Elo</div>
+          <div style={s.statLabel}>Avg Elo</div>
         </div>
       </div>
 
-      <div style={styles.chartRow}>
-        <div style={styles.chartCard}>
-          <h4 style={styles.chartTitle}>Nodes by Type</h4>
+      <div style={s.chartRow}>
+        <div style={s.chartCard}>
+          <h4 style={s.chartTitle}>Nodes by Type</h4>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
@@ -82,8 +86,8 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        <div style={styles.chartCard}>
-          <h4 style={styles.chartTitle}>Edge Confidence</h4>
+        <div style={s.chartCard}>
+          <h4 style={s.chartTitle}>Edge Confidence</h4>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={confData}>
               <XAxis dataKey="name" />
@@ -96,8 +100,8 @@ export default function Dashboard() {
       </div>
 
       {yearData.length > 0 && (
-        <div style={styles.chartCard}>
-          <h4 style={styles.chartTitle}>Papers by Year</h4>
+        <div style={s.chartCard}>
+          <h4 style={s.chartTitle}>Papers by Year</h4>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={yearData}>
               <XAxis dataKey="year" />
@@ -110,13 +114,13 @@ export default function Dashboard() {
       )}
 
       {(data.hypotheses.total_feedback_up > 0 || data.hypotheses.total_feedback_down > 0) && (
-        <div style={styles.chartCard}>
-          <h4 style={styles.chartTitle}>Feedback Summary</h4>
-          <div style={styles.feedbackRow}>
+        <div style={s.chartCard}>
+          <h4 style={s.chartTitle}>Feedback Summary</h4>
+          <div style={s.feedbackRow}>
             <span style={{ color: "#4CAF50", fontWeight: 600, fontSize: 20 }}>
               +{data.hypotheses.total_feedback_up}
             </span>
-            <span style={{ color: "#999", fontSize: 14 }}>/</span>
+            <span style={{ color: theme.textMuted, fontSize: 14 }}>/</span>
             <span style={{ color: "#F44336", fontWeight: 600, fontSize: 20 }}>
               -{data.hypotheses.total_feedback_down}
             </span>
@@ -127,38 +131,40 @@ export default function Dashboard() {
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  container: { padding: 24, overflowY: "auto", height: "100%" },
-  loading: { padding: 40, textAlign: "center" as const, color: "#999" },
-  heading: { fontSize: 22, fontWeight: 600, marginBottom: 20 },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gap: 16,
-    marginBottom: 24,
-  },
-  stat: {
-    padding: 16,
-    background: "#f8f9fa",
-    borderRadius: 8,
-    textAlign: "center" as const,
-  },
-  statValue: { fontSize: 28, fontWeight: 700, color: "#1976D2" },
-  statLabel: { fontSize: 12, color: "#666", marginTop: 4 },
-  chartRow: { display: "flex", gap: 16, marginBottom: 16 },
-  chartCard: {
-    flex: 1,
-    padding: 16,
-    border: "1px solid #e0e0e0",
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  chartTitle: { fontSize: 14, fontWeight: 600, marginBottom: 12 },
-  feedbackRow: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-    padding: 20,
-  },
-};
+function mkStyles(t: Theme): Record<string, React.CSSProperties> {
+  return {
+    container: { padding: 24, overflowY: "auto", height: "100%" },
+    loading: { padding: 40, textAlign: "center" as const, color: t.textMuted },
+    heading: { fontSize: 22, fontWeight: 600, marginBottom: 20, color: t.text },
+    grid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(4, 1fr)",
+      gap: 16,
+      marginBottom: 24,
+    },
+    stat: {
+      padding: 16,
+      background: t.cardBg,
+      borderRadius: 8,
+      textAlign: "center" as const,
+    },
+    statValue: { fontSize: 28, fontWeight: 700, color: "#1976D2" },
+    statLabel: { fontSize: 12, color: t.textMuted, marginTop: 4 },
+    chartRow: { display: "flex", gap: 16, marginBottom: 16 },
+    chartCard: {
+      flex: 1,
+      padding: 16,
+      border: `1px solid ${t.border}`,
+      borderRadius: 8,
+      marginBottom: 16,
+    },
+    chartTitle: { fontSize: 14, fontWeight: 600, marginBottom: 12, color: t.text },
+    feedbackRow: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 12,
+      padding: 20,
+    },
+  };
+}

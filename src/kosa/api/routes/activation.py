@@ -11,8 +11,11 @@ import asyncio
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from kosa.api.deps import get_driver
+from kosa.api.ratelimit import RateLimiter
 
 router = APIRouter()
+
+_ws_limiter = RateLimiter(max_requests=5, window_seconds=60)
 
 # Edge type transition weights for typed random walk
 EDGE_TYPE_WEIGHTS: dict[str, float] = {
@@ -37,6 +40,18 @@ async def simulate_activation(ws: WebSocket):
     Client sends: {"seed_id": "...", "steps": 5, "decay": 0.7}
     Server streams: {"step": N, "activations": [{"id": "...", "score": 0.X, "label": "..."}]}
     """
+    # Rate-limit before accepting the connection
+    client_ip = "unknown"
+    if ws.client:
+        client_ip = ws.client.host
+    forwarded = ws.headers.get("x-forwarded-for")
+    if forwarded:
+        client_ip = forwarded.split(",")[0].strip()
+
+    if not _ws_limiter.check_ip(client_ip):
+        await ws.close(code=1008, reason="Rate limit exceeded")
+        return
+
     await ws.accept()
 
     try:

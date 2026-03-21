@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
 from kosa.api.deps import Neo4jSession
 from kosa.api.models import (
@@ -147,11 +147,7 @@ async def get_neighborhood(
     )
     center_rec = await center_result.single()
     if not center_rec:
-        return NeighborhoodResponse(
-            graph=GraphData(nodes=[], edges=[]),
-            center_id=node_id,
-            depth=depth,
-        )
+        raise HTTPException(status_code=404, detail=f"Node {node_id} not found")
 
     center_node = center_rec["n"]
     center_type = center_rec["labels"][0] if center_rec["labels"] else "Unknown"
@@ -283,6 +279,72 @@ async def get_neighborhood(
     )
 
 
+@router.get("/all", response_model=GraphData)
+async def get_all_nodes(
+    session: Neo4jSession,
+    limit: int = Query(5000, ge=1, le=10000, description="Max nodes to return"),
+):
+    """Return the entire graph (all nodes and edges), capped by limit."""
+    nodes_map: dict[str, GraphNode] = {}
+
+    # Fetch all nodes
+    node_result = await session.run(
+        "MATCH (n) WHERE n:Paper OR n:Technique OR n:Problem OR n:Dataset "
+        "RETURN elementId(n) AS id, n, labels(n) AS labels "
+        "LIMIT $limit",
+        {"limit": limit},
+    )
+    async for rec in node_result:
+        nid = rec["id"]
+        node = rec["n"]
+        n_type = rec["labels"][0] if rec["labels"] else "Unknown"
+        n_props = dict(node)
+        nodes_map[nid] = GraphNode(
+            key=nid,
+            attributes=NodeAttributes(
+                label=n_props.get("name") or n_props.get("title") or "?",
+                node_type=n_type,
+                x=n_props.get("x", 0.0),
+                y=n_props.get("y", 0.0),
+                size=_node_size(n_props),
+                color=_node_color(n_type),
+                properties=_safe_props(n_props),
+            ),
+        )
+
+    # Fetch all edges between known nodes
+    edges_list: list[GraphEdge] = []
+    edge_result = await session.run(
+        "MATCH (a)-[r]->(b) "
+        "WHERE (a:Paper OR a:Technique OR a:Problem OR a:Dataset) "
+        "AND (b:Paper OR b:Technique OR b:Problem OR b:Dataset) "
+        "RETURN elementId(r) AS rid, type(r) AS rtype, r, "
+        "elementId(startNode(r)) AS src_id, elementId(endNode(r)) AS tgt_id"
+    )
+    async for rec in edge_result:
+        src = rec["src_id"]
+        tgt = rec["tgt_id"]
+        if src in nodes_map and tgt in nodes_map:
+            rel = dict(rec["r"])
+            confidence = rel.get("confidence", 1.0)
+            edges_list.append(
+                GraphEdge(
+                    key=rec["rid"],
+                    source=src,
+                    target=tgt,
+                    attributes=EdgeAttributes(
+                        edge_type=rec["rtype"],
+                        confidence=confidence,
+                        color=_edge_color(confidence),
+                        size=max(0.5, confidence * 2),
+                        properties=_safe_props(rel),
+                    ),
+                )
+            )
+
+    return GraphData(nodes=list(nodes_map.values()), edges=edges_list)
+
+
 @router.get("/node/{node_id}", response_model=NodeDetail)
 async def get_node(session: Neo4jSession, node_id: str):
     """Full detail for a single node."""
@@ -294,7 +356,7 @@ async def get_node(session: Neo4jSession, node_id: str):
     )
     rec = await result.single()
     if not rec:
-        return NodeDetail(id=node_id, node_type="Unknown", properties={})
+        raise HTTPException(status_code=404, detail=f"Node {node_id} not found")
 
     props = dict(rec["n"])
     n_type = rec["labels"][0] if rec["labels"] else "Unknown"

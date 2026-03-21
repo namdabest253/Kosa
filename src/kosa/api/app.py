@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from kosa.api.deps import close_driver, get_driver
-from kosa.api.routes import activation, graph, hypotheses, stats
+from kosa.api.routes import activation, graph, hypotheses, ingestion, stats
 from kosa.config import settings
 
 logger = logging.getLogger(__name__)
@@ -49,6 +49,7 @@ app.include_router(graph.router, prefix="/api/v1/graph", tags=["graph"])
 app.include_router(hypotheses.router, prefix="/api/v1/hypotheses", tags=["hypotheses"])
 app.include_router(activation.router, prefix="/api/v1/activation", tags=["activation"])
 app.include_router(stats.router, prefix="/api/v1/stats", tags=["stats"])
+app.include_router(ingestion.router, prefix="/api/v1/ingestion", tags=["ingestion"])
 
 # Serve frontend static files in production
 _web_dist = Path(__file__).resolve().parent.parent.parent.parent / "web" / "dist"

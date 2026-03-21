@@ -83,6 +83,9 @@ export interface NodeDetail {
 
 export const getGraphStats = () => fetchJSON<GraphStats>(`${BASE}/graph/stats`);
 
+export const getAllNodes = (limit = 5000) =>
+  fetchJSON<GraphData>(`${BASE}/graph/all?limit=${limit}`);
+
 export const searchNodes = (q: string, type?: string, limit = 20) => {
   const params = new URLSearchParams({ q, limit: String(limit) });
   if (type) params.set("type", type);

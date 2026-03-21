@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from kosa.api.deps import Neo4jSession
 from kosa.api.models import (
@@ -16,8 +16,11 @@ from kosa.api.models import (
     HypothesisListResponse,
     NodeAttributes,
 )
+from kosa.api.ratelimit import RateLimiter
 
 router = APIRouter()
+
+_feedback_limiter = RateLimiter(max_requests=10, window_seconds=60)
 
 
 @router.get("", response_model=HypothesisListResponse)
@@ -77,7 +80,7 @@ async def get_hypothesis(session: Neo4jSession, hypothesis_id: str):
     )
     rec = await result.single()
     if not rec:
-        return {"error": "not found"}
+        raise HTTPException(status_code=404, detail=f"Hypothesis {hypothesis_id} not found")
 
     props = dict(rec["h"])
     chain = props.get("reasoning_chain", [])
@@ -98,9 +101,11 @@ async def get_hypothesis(session: Neo4jSession, hypothesis_id: str):
 
 @router.post("/{hypothesis_id}/feedback", response_model=FeedbackResponse)
 async def submit_feedback(
+    request: Request,
     session: Neo4jSession,
     hypothesis_id: str,
     feedback: FeedbackRequest,
+    _rate: None = Depends(_feedback_limiter),
 ):
     """Submit thumbs up/down feedback on a hypothesis."""
     if feedback.vote == "up":
@@ -117,26 +122,38 @@ async def submit_feedback(
         {"id": hypothesis_id},
     )
     rec = await result.single()
+    if not rec:
+        raise HTTPException(status_code=404, detail=f"Hypothesis {hypothesis_id} not found")
 
     return FeedbackResponse(
         hypothesis_id=hypothesis_id,
-        feedback_up=rec["up"] or 0 if rec else 0,
-        feedback_down=rec["down"] or 0 if rec else 0,
+        feedback_up=rec["up"] or 0,
+        feedback_down=rec["down"] or 0,
     )
 
 
 @router.get("/{hypothesis_id}/path")
 async def get_reasoning_path(session: Neo4jSession, hypothesis_id: str):
     """Return the reasoning chain as a subgraph for visualization."""
+    # First check hypothesis exists
+    check = await session.run(
+        "MATCH (h:Hypothesis) WHERE elementId(h) = $id RETURN h",
+        {"id": hypothesis_id},
+    )
+    if not await check.single():
+        raise HTTPException(status_code=404, detail=f"Hypothesis {hypothesis_id} not found")
+
     # Get hypothesis and its linked path nodes
     result = await session.run(
         "MATCH (h:Hypothesis) WHERE elementId(h) = $id "
         "OPTIONAL MATCH (h)-[:DERIVED_FROM]->(n) "
-        "OPTIONAL MATCH (n)-[r]-(m) "
-        "WHERE elementId(m) IN ["
-        "  x IN [(h)-[:DERIVED_FROM]->(p) | elementId(p)]"
-        "] "
-        "RETURN collect(DISTINCT {id: elementId(n), node: n, labels: labels(n)}) AS nodes, "
+        "WITH collect(DISTINCT elementId(n)) AS pathIds, collect(DISTINCT n) AS pathNodes, "
+        "collect(DISTINCT labels(n)) AS pathLabels "
+        "UNWIND range(0, size(pathNodes) - 1) AS i "
+        "WITH pathIds, pathNodes[i] AS n, pathLabels[i] AS lbls, "
+        "elementId(pathNodes[i]) AS nid "
+        "OPTIONAL MATCH (n)-[r]-(m) WHERE elementId(m) IN pathIds "
+        "RETURN collect(DISTINCT {id: nid, node: n, labels: lbls}) AS nodes, "
         "collect(DISTINCT {id: elementId(r), rel: r, type: type(r), "
         "src: elementId(startNode(r)), tgt: elementId(endNode(r))}) AS edges",
         {"id": hypothesis_id},

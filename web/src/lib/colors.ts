@@ -13,7 +13,28 @@ export function nodeColor(type: string): string {
   return NODE_COLORS[type] ?? NODE_COLOR_DEFAULT;
 }
 
-/** Confidence to edge color. */
+/** Edge type to color mapping. */
+export const EDGE_COLORS: Record<string, string> = {
+  CITES: "#78909C",          // blue-grey
+  INTRODUCES: "#42A5F5",     // light blue
+  EVALUATES_ON: "#FFA726",   // orange
+  HAS_LIMITATION: "#EF5350", // red
+  MITIGATES: "#66BB6A",      // green
+  IMPROVES_OVER: "#AB47BC",  // purple
+  USES: "#26A69A",           // teal
+  IS_INSTANCE_OF: "#8D6E63", // brown
+  CAUSED_BY: "#EC407A",      // pink
+  TEMPORALLY_FOLLOWS: "#7E57C2", // deep purple
+  SAME_AS: "#BDBDBD",        // grey
+};
+
+export const EDGE_COLOR_DEFAULT = "#999999";
+
+export function edgeTypeColor(type: string): string {
+  return EDGE_COLORS[type] ?? EDGE_COLOR_DEFAULT;
+}
+
+/** Confidence to edge color (legacy, used when not coloring by type). */
 export function edgeColor(confidence: number): string {
   if (confidence > 0.8) return "#555555";
   if (confidence > 0.5) return "#999999";

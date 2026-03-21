@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 
 from neo4j import GraphDatabase
 
@@ -70,6 +71,7 @@ def compute_layout(uri: str, user: str, password: str, iterations: int = 100) ->
         g.es["weight"] = edge_weights
 
         print(f"Graph: {g.vcount()} nodes, {g.ecount()} edges")
+        layout_start = time.time()
 
         # Compute ForceAtlas2 layout (igraph uses "fruchterman_reingold" as closest analog;
         # for true ForceAtlas2, use the layout_forceatlas2 method if available)
@@ -89,16 +91,41 @@ def compute_layout(uri: str, user: str, password: str, iterations: int = 100) ->
 
         coords = layout.coords
 
-        # Write positions back to Neo4j
-        with driver.session() as session:
-            for i, node in enumerate(nodes):
-                x, y = coords[i]
-                session.run(
-                    "MATCH (n) WHERE elementId(n) = $id SET n.x = $x, n.y = $y",
-                    {"id": node["id"], "x": float(x), "y": float(y)},
-                )
+        # Normalize coordinates to [-5, 5] so FA2 gravity doesn't fight huge spread
+        xs = [c[0] for c in coords]
+        ys = [c[1] for c in coords]
+        x_range = max(xs) - min(xs) or 1
+        y_range = max(ys) - min(ys) or 1
+        scale = 10.0 / max(x_range, y_range)
+        x_center = sum(xs) / len(xs)
+        y_center = sum(ys) / len(ys)
+        coords = [((x - x_center) * scale, (y - y_center) * scale) for x, y in coords]
 
-        print(f"Wrote layout positions for {len(nodes)} nodes.")
+        layout_elapsed = time.time() - layout_start
+        print(f"Layout computed in {layout_elapsed:.1f}s. Writing positions to Neo4j ...")
+        write_start = time.time()
+
+        # Batch writes via UNWIND (500 nodes per batch)
+        batch_size = 500
+        positions = [
+            {"id": nodes[i]["id"], "x": float(coords[i][0]), "y": float(coords[i][1])}
+            for i in range(len(nodes))
+        ]
+
+        with driver.session() as session:
+            for batch_start in range(0, len(positions), batch_size):
+                batch = positions[batch_start : batch_start + batch_size]
+                session.run(
+                    "UNWIND $batch AS pos "
+                    "MATCH (n) WHERE elementId(n) = pos.id "
+                    "SET n.x = pos.x, n.y = pos.y",
+                    {"batch": batch},
+                )
+                batch_end = min(batch_start + batch_size, len(positions))
+                print(f"  Written {batch_end}/{len(positions)} node positions")
+
+        write_elapsed = time.time() - write_start
+        print(f"Wrote layout positions for {len(nodes)} nodes in {write_elapsed:.1f}s.")
         return len(nodes)
 
     finally:
